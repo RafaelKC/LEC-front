@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="icon" type="image/png" href="/assets/logotipo.png" sizes="16x16">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+    <title>Cadastro de Escola</title>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Liga Esportiva Curitiba</h1>
+        </div>
+        <img id="logoHeader" alt="Logo LEC" src="./assets/logotipo.png">
+    </header>
+
+    <main>
+        <div id="formularioContainer">
+            <div id="titulo">
+                <h3>CADASTRO DE ESCOLA</h3>
+            </div>
+            <div id="formulario">
+                <form>
+                    <div class="formInput">
+                        <input type="text" id="nome" name="nome" value="">
+                        <label for="nome">Nome</label>
+                    </div>
+
+                    <div id="emailCnpj">
+                        <div class="formInput">
+                            <input type="text" id="cnpj" name="cnpj" value="">
+                            <label for="cnpj">CNPJ</label>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="email" name="email" value="">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+
+
+                    <div id="foneContainer">
+                        <div class="formInput">
+                            <input type="text" id="mainTelefone" name="mainTelefone" value="">
+                            <label for="mainTelefone">Telefone 1</label>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="secondaryTelefone" name="secondaryTelefone" value="">
+                            <label for="secondaryTelefone">Telefone 2</label>
+                        </div>
+                    </div>
+
+                    <div id="endereco">
+                        <div class="formInput">
+                            <input type="text" id="cep" name="cep" value="">
+                            <label for="cep">CEP</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="logradouro" name="logradouro" value="">
+                            <label for="logradouro">Logradouro</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="number" id="numeroEndereco" name="numeroEndereco" value="">
+                            <label for="numeroEndereco">Numero</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="bairro" name="bairro" value="">
+                            <label for="bairro">Bairro</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="cidade" name="cidade" value="">
+                            <label for="cidade">Cidade</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="text" id="estado" name="estado" value="">
+                            <label for="estado">Estado</label><br>
+                        </div>
+
+                    </div>
+
+                    <div id="senhasForm">
+                        <div class="formInput">
+                            <input type="password" id="senha" name="senha" value="">
+                            <label for="senha">Senha</label><br>
+                        </div>
+
+                        <div class="formInput">
+                            <input type="password" id="confirmarSenha" name="confirmarSenha" value="">
+                            <label for="confirmarSenha">Confirmar Senha</label><br>
+                        </div>
+                    </div>
+
+
+                    <div id="submmitContainer">
+                        <button> Continuar </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+        <div id="capivaraFoto">
+            <img alt="Capivara Mascote" src="./assets/capivara mascote.png">
+        </div>
+    </main>
+</body>
+
+</html>
