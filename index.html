@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="icon" type="image/png" href="/assets/logotipo.png" sizes="16x16">
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
     <title>Cadastro de Escola</title>
 </head>
 
@@ -25,85 +24,98 @@
                 <h3>CADASTRO DE ESCOLA</h3>
             </div>
             <div id="formulario">
-                <form>
+                <form id="form">
                     <div class="formInput">
+                        <label for="nome">Nome </label>
                         <input type="text" id="nome" name="nome" value="">
-                        <label for="nome">Nome</label>
+                        <span>Aqui vai a mensagem de erro....</span>
                     </div>
 
                     <div id="emailCnpj">
                         <div class="formInput">
-                            <input type="text" id="cnpj" name="cnpj" value="">
                             <label for="cnpj">CNPJ</label>
+                            <input type="text" id="cnpj" name="cnpj" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
-                            <input type="text" id="email" name="email" value="">
                             <label for="email">Email</label>
+                            <input type="text" id="email" name="email" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
                     </div>
 
 
                     <div id="foneContainer">
                         <div class="formInput">
-                            <input type="text" id="mainTelefone" name="mainTelefone" value="">
                             <label for="mainTelefone">Telefone 1</label>
+                            <input type="text" id="mainTelefone" name="mainTelefone" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
-                            <input type="text" id="secondaryTelefone" name="secondaryTelefone" value="">
                             <label for="secondaryTelefone">Telefone 2</label>
+                            <input type="text" id="secondaryTelefone" name="secondaryTelefone" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
                     </div>
 
                     <div id="endereco">
                         <div class="formInput">
+                            <label for="cep">CEP</label>
                             <input type="text" id="cep" name="cep" value="">
-                            <label for="cep">CEP</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="logradouro">Logradouro</label>
                             <input type="text" id="logradouro" name="logradouro" value="">
-                            <label for="logradouro">Logradouro</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="numeroEndereco">Numero</label>
                             <input type="number" id="numeroEndereco" name="numeroEndereco" value="">
-                            <label for="numeroEndereco">Numero</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="bairro">Cidade</label>
                             <input type="text" id="bairro" name="bairro" value="">
-                            <label for="bairro">Bairro</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="cidade">Cidade</label>
                             <input type="text" id="cidade" name="cidade" value="">
-                            <label for="cidade">Cidade</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="estado">Estado</label>
                             <input type="text" id="estado" name="estado" value="">
-                            <label for="estado">Estado</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                     </div>
 
                     <div id="senhasForm">
                         <div class="formInput">
+                            <label for="senha">Senha</label>
                             <input type="password" id="senha" name="senha" value="">
-                            <label for="senha">Senha</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
 
                         <div class="formInput">
+                            <label for="confirmarSenha">Confirmar Senha</label>
                             <input type="password" id="confirmarSenha" name="confirmarSenha" value="">
-                            <label for="confirmarSenha">Confirmar Senha</label><br>
+                            <span>Aqui vai a mensagem de erro....</span>
                         </div>
                     </div>
 
 
                     <div id="submmitContainer">
-                        <button> Continuar </button>
+                        <button type="submit" id="btn"> Continuar </button>
                     </div>
 
                 </form>
@@ -114,6 +126,7 @@
             <img alt="Capivara Mascote" src="./assets/capivara mascote.png">
         </div>
     </main>
+    <script src="script.js"></script>
 </body>
 
 </html>
