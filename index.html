@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="icon" type="image/png" href="/assets/logotipo.png" sizes="16x16">
     <link rel="stylesheet" href="styles.css">
+    <script type="module" src="script.js"></script>
     <title>Cadastro de Escola</title>
 </head>
 
@@ -25,10 +26,18 @@
             </div>
             <div id="formulario">
                 <form id="form">
-                    <div class="formInput">
-                        <label for="nome">Nome </label>
-                        <input type="text" id="nome" name="nome" value="">
-                        <span>Aqui vai a mensagem de erro....</span>
+                    <div id="nomeInput">
+                        <div class="formInput">
+                            <label for="nome">Nome </label>
+                            <input type="text" id="nome" name="nome" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="sobrenome">Sobrenome </label>
+                            <input type="text" id="sobrenome" name="sobrenome" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
                     </div>
 
                     <div id="emailCnpj">
@@ -80,7 +89,7 @@
                         </div>
 
                         <div class="formInput">
-                            <label for="bairro">Cidade</label>
+                            <label for="bairro">Bairro</label>
                             <input type="text" id="bairro" name="bairro" value="">
                             <span>Aqui vai a mensagem de erro....</span>
                         </div>
@@ -114,9 +123,21 @@
                     </div>
 
 
-                    <div id="submmitContainer">
-                        <button type="submit" id="btn"> Continuar </button>
+                    <div id="footer">
+                        <div id="passTips">
+                            <ul>
+                                <li>A senha deve ter ao mínimo 8 caracteres</li>
+                                <li>A senha deve ter ao menos um caracter maiúsculo</li>
+                                <li>A senha deve ter ao menos um caracter minusculo</li>
+                                <li>A senha deve ter ao menos um caracter numérico</li>
+                                <li>A senha deve ter ao menos um caracter especial</li>
+                            </ul>
+                        </div>
+                        <div id="submmitContainer">
+                            <button type="submit" id="btn"> Continuar </button>
+                        </div>
                     </div>
+
 
                 </form>
             </div>
@@ -126,7 +147,6 @@
             <img alt="Capivara Mascote" src="./assets/capivara mascote.png">
         </div>
     </main>
-    <script src="script.js"></script>
 </body>
 
 </html>
