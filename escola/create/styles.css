@@ -1,0 +1,153 @@
+body, html{
+    height: 100%;
+  }
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+header {
+    height: 12%;
+    background-color: #1A70A2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    color: white;
+}
+
+#logoHeader {
+    height: 10vh;
+}
+
+#formularioContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+    margin-top: 96px;
+    position: relative;
+    z-index: 1;
+}
+
+#titulo h3 {
+    margin: 32px;
+    font-size: 32px;
+    color: #1A70A2;
+}
+
+#formulario form {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    width: 100%;
+}
+
+#formulario {
+    width: 30vw;
+}
+
+#foneContainer, #endereco {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+} 
+
+#emailCnpj, #foneContainer, #senhasForm, #nomeInput {
+    display: flex;
+    gap: 16px;
+    flex-direction: row;
+}
+
+.formInput {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 60px;
+}
+
+.formInput input {
+    width: 100%;
+    height: 25px;
+    padding: 0 4px;
+    border: none;
+    background-color: #1a70a22e;
+}
+
+.formInput label {
+    font-size: 14px;
+    color: #1a70a2;
+    display: flex;
+    align-items: flex-end;
+}
+
+.formInput span{
+    position: absolute;
+    visibility: hidden;
+    font-size: 12px;
+  }
+
+#endereco {
+    display: grid;
+    justify-items: stretch;
+    align-items: start;
+    grid-template-columns: 2fr 3fr 1fr;
+}
+
+#submmitContainer {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#submmitContainer button {
+    padding: 8px;
+    border: none;
+    background-color: #1A70A2;
+    color: white;
+}
+
+#capivaraFoto img {
+    height: 350px; 
+}
+
+#capivaraFoto {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 20px;
+    right: 1px;
+    z-index: 0;
+}
+
+.formInput.error input{
+    border-color: red;
+    border-style: solid;
+    border-width: 2px;
+  }
+  
+  .formInput.error span{
+    color: red;
+    visibility: visible;
+    position: initial;
+  }
+
+#btn{
+    cursor: pointer;
+}
+
+div#footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+#passTips {
+    margin-left: 16px;
+    font-size: 12px;
+    color: #1a70a2;
+}
