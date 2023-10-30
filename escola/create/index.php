@@ -153,6 +153,7 @@
 
 
 <?php
+        
         if(isset($_POST['cadastro_escola'])) {
             $escolaId = uniqid();
             $nome = mysqli_real_escape_string($connection, $_POST['nome']);
@@ -160,13 +161,16 @@
             $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
             $email = mysqli_real_escape_string($connection, $_POST['email']);
             $mainTelefone = mysqli_real_escape_string($connection, $_POST['mainTelefone']);
+            $mainTelefone = preg_replace('/[^0-9]/', '', $mainTelefone);
             $secondaryTelefone = mysqli_real_escape_string($connection, $_POST['secondaryTelefone']);
+            $secondaryTelefone = preg_replace('/[^0-9]/', '', $secondaryTelefone);
             $senha = mysqli_real_escape_string($connection, $_POST['senha']);
             $confirmarSenha = mysqli_real_escape_string($connection, $_POST['confirmarSenha']);
 
         
             $enderecoId = uniqid();
             $cep = mysqli_real_escape_string($connection, $_POST['cep']);
+            $cep = preg_replace('/[^0-9]/', '', $cep);
             $logradouro = mysqli_real_escape_string($connection, $_POST['logradouro']);
             $numeroEndereco = mysqli_real_escape_string($connection, $_POST['numeroEndereco']);
             $bairro = mysqli_real_escape_string($connection, $_POST['bairro']);
