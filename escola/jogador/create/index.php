@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="icon" type="image/png" href="../../../assets/logotipo.png" sizes="16x16">
     <title>Cadastro de Aluno</title>
-    <script type="module" src="./index.js"></script>
+    <script type="module" src="script.js"></script>
 </head>
 
 <body>
