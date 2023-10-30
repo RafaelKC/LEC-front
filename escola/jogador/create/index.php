@@ -31,7 +31,7 @@
                 <h3>CADASTRO DE ALUNO</h3>
             </div>
             <div id="formulario">
-                <form id="form" name="create_jogador">
+                <form id="form" action="index.php" method="post" name="create_jogador">
                     <div id="nomeInput">
                         <div class="formInput">
                             <label for="nome">Nome </label>
@@ -74,7 +74,7 @@
                     <div class="doubleContainer">
                         <div class="formInput">
                             <label for="nmrCamisa">Número da camisa</label>
-                            <input type="number" id="nmrCamisa" name="nmrCamisa">
+                            <input type="number" id="nmrCamisa" name="numeroCamisa">
                             <span>Aqui vai a mensagem de erro....</span>
                         </div>
                         <div class="formInput">
@@ -87,6 +87,12 @@
                     <div class="formInput">
                         <label for="cpf">CPF</label>
                         <input type="text" id="cpf" name="cpf" value="">
+                        <span>Aqui vai a mensagem de erro....</span>
+                    </div>
+
+                    <div class="formInput">
+                        <label for="escola">Escola:</label>
+                        <input type="text" id="idEscola" name="idEscola" value="">
                         <span>Aqui vai a mensagem de erro....</span>
                     </div>
 
@@ -107,3 +113,28 @@
 </body>
 
 </html>
+
+<?php
+    if(isset($_POST['create_jogador'])) {
+        $jogadorId = uniqid();
+        $nome = mysqli_real_escape_string($connection, $_POST['nome']);
+        $sexo = mysqli_real_escape_string($connection, $_POST['sexo']);
+        $birthdate = mysqli_real_escape_string($connection, $_POST['birthdate']);
+        $numeroCamisa = mysqli_real_escape_string($connection, $_POST['numeroCamisa']);
+        $nomeDeJogo = mysqli_real_escape_string($connection, $_POST['nomeDeJogo']);
+        $cpf = mysqli_real_escape_string($connection, $_POST['cpf']);
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        $idEscola = mysqli_real_escape_string($connection, $_POST['idEscola']);
+
+        $sqlCreateJogador = "INSERT INTO TBJogador(id, idSexo, cpf, nome, dataNascimento, numeroCamisa, nomeJogo, idEscola)
+            VALUES
+                ('$jogadorId', '$sexo', '$cpf' ,'$nome', '$birthdate', '$numeroCamisa', '$nomeDeJogo', '$idEscola');";
+
+        $createJogador = mysqli_query($connection, $sqlCreateJogador);
+
+        if(!$createJogador){
+            echo '<b>Error</b>';
+        }
+    }
+    mysqli_close($connection);
+?>
