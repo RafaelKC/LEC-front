@@ -1,28 +1,3 @@
-body, html{
-    height: 100%;
-  }
-
-
-* {
-    margin: 0;
-    padding: 0;
-    font-family: 'Open Sans', sans-serif;
-}
-
-header {
-    height: 12%;
-    background-color: #1A70A2;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 8px;
-    color: white;
-}
-
-#logoHeader {
-    height: 10vh;
-}
-
 #formularioContainer {
     display: flex;
     flex-direction: column;
@@ -119,19 +94,6 @@ header {
     color: white;
 }
 
-#capivaraFoto img {
-    height: 350px; 
-}
-
-#capivaraFoto {
-    display: flex;
-    justify-content: flex-end;
-    position: absolute;
-    bottom: 20px;
-    right: 1px;
-    z-index: 0;
-}
-
 .formInput.error input{
     border-color: red;
     border-style: solid;
@@ -146,12 +108,6 @@ header {
 
 #btn{
     cursor: pointer;
-}
-
-div#footer {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
 }
 
 #passTips {
