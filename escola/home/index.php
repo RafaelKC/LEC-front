@@ -1,7 +1,15 @@
 <?php
 include('../../banco/connection.php');
 
-$sql = "SELECT nome from tbescola";
+$sql = "SELECT
+    CONCAT(Mandante.nome, ' x ', Visitante.nome) AS NomePartida,
+    P.dataHora AS DataHoraPartida,
+    P.duracaoMilessegundos AS DuracaoMilliseconds,
+    P.idTemporada AS TemporadaID
+FROM TBPartida P
+JOIN TBEscola Mandante ON P.mandanteId = Mandante.id
+JOIN TBEscola Visitante ON P.visitanteId = Visitante.id;
+";
 
 
 
@@ -32,21 +40,27 @@ if (!$result) {
         <div>
             <h1>Liga Esportiva Curitiba</h1>
         </div>
-        <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
+        <div>
+            <a href="/LEC-front/escola/create/">Cadastrar escola</a>
+            <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
+        </div>
+
     </header>
 
     <main>
-        <table class="tabela">
-            <tr>
-                <th>Escolas participantes:</th>
-
-            </tr>
-            <?php
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row['nome'] . "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </table>
-    </main>
+    <table class="tabela">
+        <tr>
+            <th>Jogos:</th>
+            <th colspan="2">Data dos jogos:</th>
+            <th colspan="3">Temporada</th>
+        </tr>
+        <?php
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row['NomePartida'] . "</td>";
+            echo "<td>" . $row['DataHoraPartida'] . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</main>
