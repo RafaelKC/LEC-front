@@ -38,3 +38,38 @@ a{
 a:hover{
     color: rgb(223, 223, 223);
 }
+
+caption{
+    padding: 10rem;
+    margin: 5px 0 0 0;
+}
+.tabela{
+    background-color: #7fcefc;
+    color: white;
+    width: 50%;
+    
+}
+
+.tabela >caption{
+    background-color: #2085c0;
+}
+
+caption,
+th, 
+td {
+    padding: 8px; 
+    text-align: center; 
+    
+  }
+
+th{
+    background-color: hsla(204, 80%, 29%, 0.5);
+}
+
+tr:nth-of-type(2n){
+    background-color: hsla(204, 80%, 29%, 0.5);
+}
+
+td{
+    text-align: center;
+}

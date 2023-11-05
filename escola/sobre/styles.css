@@ -1,0 +1,24 @@
+body, html{
+    height: 100%;
+  }
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+header {
+    height: 12%;
+    background-color: #1A70A2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    color: white;
+}
+
+#logoHeader {
+    height: 10vh;
+}

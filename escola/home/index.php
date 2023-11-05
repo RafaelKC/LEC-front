@@ -3,19 +3,27 @@ include('../../banco/connection.php');
 
 $sql = "SELECT
     CONCAT(Mandante.nome, ' x ', Visitante.nome) AS NomePartida,
-    P.dataHora AS DataHoraPartida,
+    P.data AS DataHoraPartida,
     P.duracaoMilessegundos AS DuracaoMilliseconds,
-    P.idTemporada AS TemporadaID
+    1 AS TemporadaID
 FROM TBPartida P
-JOIN TBEscola Mandante ON P.mandanteId = Mandante.id
-JOIN TBEscola Visitante ON P.visitanteId = Visitante.id;
+JOIN TBEscola Mandante ON P.idMandante = Mandante.id
+JOIN TBEscola Visitante ON P.idVisitante = Visitante.id;
 ";
+
 
 
 
 $result = mysqli_query($connection, $sql);
 
 if (!$result) {
+    die("Query failed: " . mysqli_error($conn));
+}
+
+$sqlEscolasParticipantes = "SELECT id, nome FROM TBEscola";
+$resultEscolasParticipantes = mysqli_query($connection, $sqlEscolasParticipantes);
+
+if (!$resultEscolasParticipantes) {
     die("Query failed: " . mysqli_error($conn));
 }
 ?>
@@ -48,19 +56,43 @@ if (!$result) {
     </header>
 
     <main>
-    <table class="tabela">
-        <tr>
-            <th>Jogos:</th>
-            <th colspan="2">Data dos jogos:</th>
-            <th colspan="3">Temporada</th>
-        </tr>
-        <?php
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $row['NomePartida'] . "</td>";
-            echo "<td>" . $row['DataHoraPartida'] . "</td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
+    <div style="display: flex; width: 100%;">
+        <table class="tabela" style="flex: 1;">
+            <caption>
+                Lista de jogos
+            </caption>
+            <tr>
+                <th>Data dos jogos:</th>
+                <th>Jogos:</th>
+                <th>Temporada:</th>
+            </tr>
+            <?php
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row['DataHoraPartida'] . "</td>";
+                echo "<td>" . $row['NomePartida'] . "</td>";
+                echo "<td>" . $row['TemporadaID'] . "</td>";
+                echo "</tr>";
+            }
+            ?>
+        </table>
+        <table class="tabela" style="flex: 1;">
+            <caption>
+                Escolas participantes
+            </caption>
+            <tr>
+                <th>ID Escola</th>
+                <th>Nome da Escola</th>
+            </tr>
+            <?php
+            while ($row = mysqli_fetch_assoc($resultEscolasParticipantes)) {
+                echo "<tr>";
+                echo "<td>" . $row['id'] . "</td>";
+                echo "<td>" . $row['nome'] . "</td>";
+                echo "</tr>";
+            }
+            ?>
+        </table>
+    </div>
 </main>
+
