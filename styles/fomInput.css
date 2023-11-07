@@ -1,3 +1,7 @@
+*{
+    font-family: 'Inter', sans-serif;
+}
+
 #formularioContainer {
     display: flex;
     flex-direction: column;

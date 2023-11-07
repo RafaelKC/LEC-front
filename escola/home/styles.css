@@ -6,7 +6,8 @@ body, html{
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
 header {
@@ -44,14 +45,14 @@ caption{
     margin: 5px 0 0 0;
 }
 .tabela{
-    background-color: #7fcefc;
+    background-color: #46b4f3;
     color: white;
     width: 50%;
-    
+    border: white 3px solid;
 }
 
 .tabela >caption{
-    background-color: #2085c0;
+    background-color: #0475b6;
 }
 
 caption,
@@ -59,17 +60,18 @@ th,
 td {
     padding: 8px; 
     text-align: center; 
-    
+    border: 1px solid #ddd;
   }
 
 th{
-    background-color: hsla(204, 80%, 29%, 0.5);
+    background-color: #0475b6;
 }
 
 tr:nth-of-type(2n){
-    background-color: hsla(204, 80%, 29%, 0.5);
+    background-color: #8fc9eb;
 }
 
 td{
     text-align: center;
+    color: black;
 }

@@ -6,7 +6,7 @@ body, html{
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 header {
@@ -21,4 +21,60 @@ header {
 
 #logoHeader {
     height: 10vh;
+}
+
+/* Estilizando a seção "Sobre" */
+#sobre {
+    background-color: #f5f5f5;
+    padding: 40px 0;
+    text-align: center;
+}
+
+#sobre .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#sobre h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#sobre p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+#sobre ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+#sobre li {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+}
+
+
+@media (max-width: 768px) {
+    #sobre h2 {
+        font-size: 24px;
+    }
+
+    #sobre p {
+        font-size: 14px;
+    }
+
+    #sobre ul {
+        padding-left: 10px;
+    }
+
+    #sobre li {
+        font-size: 14px;
+    }
 }
