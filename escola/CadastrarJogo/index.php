@@ -1,6 +1,14 @@
 <?php
 include('../../banco/connection.php');
+$campeonatoSelecionado = false;
+
+if (isset($_POST['select_campeonato'])) {
+    $campeonatoSelecionado = true;
+    $selectedCampeonatoId = mysqli_real_escape_string($connection, $_POST['campeonato']);
+
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +30,43 @@ include('../../banco/connection.php');
         <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
     </header>
     <main>
-        <div id="formularioContainer">
+        <div id="campeonatoContainer">
+            <div id="titulo">
+                <h3>SELECIONE O CAMPEONATO</h3>
+            </div>
+            <div id="campeonatoForm">
+                <form id="campeonatoSelectForm" action="index.php" method="post" name="select_campeonato">
+                    <div class="formInput">
+                        <label for="campeonato">Selecione o Campeonato:</label>
+                        <select name="campeonato" id="campeonato">
+                            <?php
+                            $sqlCampeonato = "SELECT id, nome FROM LEC.TBCampeonato";
+                            $resultCampeonato = mysqli_query($connection, $sqlCampeonato);
+                            $resultCheckCampeonato = mysqli_num_rows($resultCampeonato);
+                            if ($resultCheckCampeonato > 0) {
+                                while ($rowCampeonato = mysqli_fetch_assoc($resultCampeonato)) {
+                                    echo '<option value="' . $rowCampeonato['id'] . '">' . $rowCampeonato['nome'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div id="submmitContainer">
+                        <button type="submit" id="selectCampeonatoBtn" name="select_campeonato">Selecionar
+                            Campeonato</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <?php
+        if (isset($_POST['select_campeonato'])) {
+            $selectedCampeonatoId = mysqli_real_escape_string($connection, $_POST['campeonato']);
+
+            // Agora você pode usar $selectedCampeonatoId para obter informações sobre o campeonato selecionado
+        }
+        ?>
+        <div id="formularioContainer" <?php echo $campeonatoSelecionado ? '' : 'style="display: none;"'; ?>>
             <div id="titulo">
                 <h3>REGISTRO DE PARTIDA</h3>
             </div>
@@ -84,7 +128,7 @@ if (isset($_POST['create_partida'])) {
 
 
     $sqlCreatePartida = "INSERT INTO TBPartida (id, data, duracaoMilessegundos, idMandante, idVisitante, idTemporada) VALUES ('$partidaId', '$data', $duracaoMilessegundos, '$EscolaMandante', '$EscolaVisitante', '31bfd9e1-7dc0-11ee-8657-02506150e648')";
-;
+    ;
 
 
     $createPartida = mysqli_query($connection, $sqlCreatePartida);

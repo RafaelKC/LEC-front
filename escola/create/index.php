@@ -13,6 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
         <link rel="icon" type="image/png" href="../../assets/logotipo.png" sizes="16x16">
+        <script type="module" src="script.js"></script>
         <title>Cadastro de Escola</title>
 </head>
 <body>
