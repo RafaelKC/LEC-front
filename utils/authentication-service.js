@@ -1,7 +1,4 @@
 export default class AuthenticationService {
-
-    USER_STORAGE_KEY = 'ca3ff7f1-6bd4-4b18-86e9-52c6100b0d2a';
-
     ESCOLA_TYPE = 'ESCOLA'
     PATROCIONADOR_TYPE = 'PATROCINADOR'
 
@@ -9,17 +6,11 @@ export default class AuthenticationService {
 
     getUserFromStorageAndIfIsLogged() {
         if (this.loggedUser) return this.loggedUser;
-
-        const userSerialized = window.localStorage.getItem(this.USER_STORAGE_KEY);
-        if (!userSerialized) return null;
-        this.loggedUser = JSON.parse(userSerialized);
-
-        return this.loggedUser;
+        return null;
     }
 
     setUser(user) {
         this.loggedUser = user;
-        window.localStorage.setItem(this.USER_STORAGE_KEY, this.loggedUser)
     }
 
     logOut() {

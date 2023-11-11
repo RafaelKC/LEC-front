@@ -7,6 +7,7 @@ body, html{
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
 header {
@@ -19,8 +20,43 @@ header {
     color: white;
 }
 
-#logoHeader {
+header > * {
+    flex: 1;
+}
+
+#logo {
     height: 10vh;
+}
+
+.logoHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+
+a{
+
+    text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    color: rgb(223, 223, 223);
+}
+
+.options {
+    height: 100%;
+    display: flex;
+    padding: 21px 16px;
+    gap: 27px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.headerSegundario {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 16px;
 }
 
 #capivaraFoto img {

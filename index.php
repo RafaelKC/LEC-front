@@ -1,5 +1,7 @@
 <?php
-include('../../banco/connection.php');
+include('./banco/connection.php');
+
+session_start();
 
 $sql = "SELECT
     CONCAT(Mandante.nome, ' x ', Visitante.nome) AS NomePartida,
@@ -21,14 +23,14 @@ JOIN TBCampeonato Campeonato ON Temporada.idCampeonato = Campeonato.id;";
 $result = mysqli_query($connection, $sql);
 
 if (!$result) {
-    die("Query failed: " . mysqli_error($conn));
+    die("Query failed: " . mysqli_error($connection));
 }
 
 $sqlEscolasParticipantes = "SELECT id, nome FROM TBEscola";
 $resultEscolasParticipantes = mysqli_query($connection, $sqlEscolasParticipantes);
 
 if (!$resultEscolasParticipantes) {
-    die("Query failed: " . mysqli_error($conn));
+    die("Query failed: " . mysqli_error($connection));
 }
 
 
@@ -48,10 +50,11 @@ if (!$resultEscolasParticipantes) {
     </style>
 
    
+    <link rel="stylesheet" href="./styles/base.css">
     <link rel="stylesheet" href="styles.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <link rel="icon" type="image/png" href="../../assets/logotipo.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="assets/logotipo.png" sizes="16x16">
     <title>Cadastro de Aluno</title>
     <script type="module" src="./index.js"></script>
 </head>
@@ -60,12 +63,27 @@ if (!$resultEscolasParticipantes) {
     <header>
         <div>
             <h1>Liga Esportiva Curitiba</h1>
+            <?php
+            if (isset($_SESSION['user'])) {
+                echo '<h3>'.$_SESSION['user']['nome'].'</h3>';
+            }
+            ?>
         </div>
-        <div>
-            <a href="/LEC-front/escola/create/">Cadastrar escola</a>
-            <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
+        <div class="options">
+            <?php
+                if (!isset($_SESSION['user'])) {
+                    echo '<a class="headerSegundario" href="/LEC-front/login">Login</a>';
+                    echo '<a class="headerSegundario" href="/LEC-front/escola/create/">Cadastrar escola</a>';
+                    echo '<a class="headerSegundario">Cadastrar patrocinador </a>';
+                } else {
+                    echo '<a class="headerSegundario" href="/LEC-front/sair">Sair</a>';
+                }
+                echo '<a class="headerSegundario" href="/LEC-front/sobre">Sobre</a>';
+            ?>
         </div>
-
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="assets/logotipo.png">
+        </div>
     </header>
 
     <main>

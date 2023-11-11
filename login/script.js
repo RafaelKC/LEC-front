@@ -1,4 +1,4 @@
-import AuthenticationService from '../../utils/authentication-service.js'
+import AuthenticationService from '../utils/authentication-service.js'
 
 const authenticationService = new AuthenticationService();
 
@@ -64,13 +64,4 @@ function validateSenha(){
         formItem.className = "formInput"
         return true
     }
-}
-
-function errorInput(input, message){
-    const formItem = input.parentElement
-    const textMessage = formItem.querySelector("span")
-
-    textMessage.innerText = message
-
-    formItem.className = "formInput error"
 }

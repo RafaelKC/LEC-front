@@ -2,16 +2,6 @@
     font-family: 'Inter', sans-serif;
 }
 
-#campeonatoContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 32px;
-    margin-top: 96px;
-    position: relative;
-    z-index: 1;
-}
-
 #formularioContainer {
     display: flex;
     flex-direction: column;

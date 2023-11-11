@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    include('../banco/connection.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,18 +12,34 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap"
       rel="stylesheet"
-    />
+    /><link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header>
-      <div>
-        <h1>Liga Esportiva Curitiba</h1>
-      </div>
-      <div>
-        <a href="/LEC-front/escola/create/">Cadastrar escola</a>
-        <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png" />
-      </div>
+        <div>
+            <h1>Liga Esportiva Curitiba</h1>
+            <?php
+            if (isset($_SESSION['user'])) {
+                echo '<h3>'.$_SESSION['user']['nome'].'</h3>';
+            }
+            ?>
+        </div>
+        <div class="options">
+            <?php
+            if (!isset($_SESSION['user'])) {
+                echo '<a class="headerSegundario" href="/LEC-front/login">Login</a>';
+                echo '<a class="headerSegundario" href="/LEC-front/escola/create/">Cadastrar escola</a>';
+                echo '<a class="headerSegundario">Cadastrar patrocinador </a>';
+            } else {
+                echo '<a class="headerSegundario" href="/LEC-front/sair">Sair</a>';
+            }
+            echo '<a class="headerSegundario" href="/LEC-front">Home</a>';
+            ?>
+        </div>
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">
+        </div>
     </header>
     <main>
       <section id="sobre" class="section">
