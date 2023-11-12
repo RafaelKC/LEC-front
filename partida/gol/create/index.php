@@ -1,6 +1,7 @@
 <?php
 include('../../../banco/connection.php');
-session_start();
+
+$gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -43,59 +44,94 @@ session_start();
                 <h3>Adicionar Gols</h3>
             </div>
             <div id="formulario">
-                <form id="form" action="process_goals.php" method="post">
+                <form id="form" action="index.php" method="post" name="add_gols">
 
+
+                    <input type="hidden" name="gameId" value="<?php echo $gameId; ?>">
                     <div class="formInput">
                         <label for="idJogadorMarcou">Jogador que Marcou:</label>
-
-                        <input type="text" name="idJogadorMarcou">
-                    </div>
-                    <div class="formInput">
-                        <label for="idJogadorAssistencia">Jogador de Assistência:</label>
-
-                        <input type="text" name="idJogadorAssistencia">
-                    </div>
-                    <div class="formInput">
-                        <label for="anulado">Anulado:</label>
-                        <select name="anulado">
-                            <option value="0">Não</option>
-                            <option value="1">Sim</option>
+                        <select name="idJogadorMarcou" id="idJogadorMarcou">
+                            <?php
+                            $sql = "SELECT id, nome FROM LEC.TBJogador";
+                            $result = mysqli_query($connection, $sql);
+                            $resultCheck = mysqli_num_rows($result);
+                            if ($resultCheck > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
+                                }
+                            }
+                            ?>
                         </select>
-                    </div>
-                    <div class="formInput">
-                        <label for="pnalti">Penalti:</label>
-                        <select name="pnalti">
-                            <option value="0">Não</option>
-                            <option value="1">Sim</option>
-                        </select>
-                    </div>
-                    <div class="formInput">
-                        <label for="tempoEmMilissegundos">Tempo de Jogo (ms):</label>
-                        <input type="number" name="tempoEmMilissegundos">
-                    </div>
-                    <input type="hidden" name="idPartida" value="<?php echo $_GET['id']; ?>">
+                        <div class="formInput">
+                            <label for="idJogadorAssistencia">Jogador de Assistência:</label>
+                            <select name="idJogadorAssistencia">
+                                <option value="">Nenhum</option>
+                                <?php
+                                $sql = "SELECT id, nome FROM LEC.TBJogador";
+                                $result = mysqli_query($connection, $sql);
+                                $resultCheck = mysqli_num_rows($result);
+                                if ($resultCheck > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="formInput">
+                            <label for="anulado">Anulado:</label>
+                            <select name="anulado" required>
+                                <option value="0">Não</option>
+                                <option value="1">Sim</option>
+                            </select>
+                        </div>
+                        <div class="formInput">
+                            <label for="pnalti">Penalti:</label>
+                            <select name="pnalti" required>
+                                <option value="0">Não</option>
+                                <option value="1">Sim</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="tempoEmMilissegundos" value=38000>
+                        <input type="hidden" name="idPartida" value="<?php echo $gameId; ?>">
 
 
-
-
-
-
-
-
-
-
-                    <div class="submmitContainer">
-                        <button id="btn" type="submit">Adicionar Gol</button>
-                    </div>
-
+                        <div class="submmitContainer">
+                            <button id="btn" type="submit" name="add_gols">Adicionar Gol</button>
+                        </div>
                 </form>
             </div>
         </div>
-
-
-
-
     </main>
 </body>
 
 </html>
+
+<?php
+if (isset($_POST['add_gols'])) {
+    $golId = uniqid();
+    $idPartida = mysqli_real_escape_string($connection, $_POST['gameId']);
+    $idJogadorMarcou = mysqli_real_escape_string($connection, $_POST['idJogadorMarcou']);
+    $idJogadorAssistencia = mysqli_real_escape_string($connection, $_POST['idJogadorAssistencia']);
+    echo "idJogadorAssistencia: $idJogadorAssistencia"; // Add this line for debugging
+    if ($idJogadorAssistencia === 'null') {
+        $idJogadorAssistencia = null;
+    }
+    $anulado = mysqli_real_escape_string($connection, $_POST['anulado']);
+    $penalti = mysqli_real_escape_string($connection, $_POST['pnalti']);
+    $tempo = mysqli_real_escape_string($connection, $_POST['tempoEmMilissegundos']);
+
+
+    $sqlAddGols = "INSERT INTO TBGol(id, idPartida, idJogadorMarcou, idJogadorAssistencia, anulado, pnalti, tempoEmMilissegundos)
+            VALUES
+                ('$golId', '$idPartida', '$idJogadorMarcou' ,'$idJogadorAssistencia', '$anulado', '$penalti', '$tempo');";
+
+    $addGols = mysqli_query($connection, $sqlAddGols);
+
+    if (!$addGols) {
+        echo '<b>Error</b>';
+    }
+}
+mysqli_close($connection);
+
+?>
