@@ -1,6 +1,10 @@
 <?php
     include('../banco/connection.php');
+    include('../utils/functions/formatMilissegundos.php');
     session_start();
+    if (!isset($_GET['id'])) {
+        header('Location: ../');
+    }
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +107,7 @@
                             <th>Assistência</th>
                             <th>Anulado</th>
                             <th>Penalti</th>
-                            <th>Tempo de jogo (ms)</th>
+                            <th>Tempo da partida</th>
                         </tr>
                         <?php
                         $sqlGoals = "SELECT
@@ -133,7 +137,7 @@
                                         <?php echo ($goal['pnalti'] ? 'Sim' : 'Não'); ?>
                                     </td>
                                     <td>
-                                        <?php echo $goal['tempoEmMilissegundos']; ?>
+                                        <?php echo formatMilliseconds($goal['tempoEmMilissegundos']); ?>
                                     </td>
                                 </tr>
                                 <?php
@@ -143,11 +147,17 @@
                         }
                         ?>
                     </table>
-                    <div id="extraContainer">
-                        <a href="/LEC-front/partida/gol/create?id=<?php echo $gameId; ?>">
-                            <button id="golsBtn">Clique aqui para adicionar gols</button>
-                        </a>
-                    </div>
+                    <?php
+                        if (isset($_SESSION['user']) && $_SESSION['user']['type'] == 'ESCOLA') {
+                            echo '
+                            <div id="extraContainer">
+                                <a href="/LEC-front/partida/gol/create?idPartida='.$gameId.'">
+                                    <button id="golsBtn">Clique aqui para adicionar gols</button>
+                                </a>
+                            </div>';
+                        }
+                    ?>
+
                     <?php
                 } else {
                     echo "Não encontramos esse jogo :(.";
@@ -155,8 +165,6 @@
             } else {
                 die("Query failed: " . mysqli_error($connection));
             }
-        } else {
-            echo "Nenhum id de jogo encontrado.";
         }
         ?>
 

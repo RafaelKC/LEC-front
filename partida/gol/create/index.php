@@ -1,7 +1,8 @@
 <?php
-include('../../../banco/connection.php');
-
-$gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
+    include('../../../banco/connection.php');
+    session_start();
+    if (!isset($_SESSION['user']) || !isset($_GET['idPartida'])) {
+    }
 ?>
 
 <!DOCTYPE html>
@@ -19,9 +20,8 @@ $gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
     <link rel="stylesheet" href="../../../styles/fomInput.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <link rel="icon" type="image/png" href="assets/logotipo.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="../../../assets/logotipo.png" sizes="16x16">
     <title>Adicionar Gols</title>
-    <script type="module" src="./index.js"></script>
 </head>
 
 <body>
@@ -46,8 +46,6 @@ $gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
             <div id="formulario">
                 <form id="form" action="index.php" method="post" name="add_gols">
 
-
-                    <input type="hidden" name="gameId" value="<?php echo $gameId; ?>">
                     <div class="formInput">
                         <label for="idJogadorMarcou">Jogador que Marcou:</label>
                         <select name="idJogadorMarcou" id="idJogadorMarcou">
@@ -80,20 +78,23 @@ $gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
                         </div>
                         <div class="formInput">
                             <label for="anulado">Anulado:</label>
-                            <select name="anulado" required>
+                            <select name="anulado" id="anulado" required>
                                 <option value="0">Não</option>
                                 <option value="1">Sim</option>
                             </select>
                         </div>
                         <div class="formInput">
                             <label for="pnalti">Penalti:</label>
-                            <select name="pnalti" required>
+                            <select name="pnalti" id="pnalti" required>
                                 <option value="0">Não</option>
                                 <option value="1">Sim</option>
                             </select>
                         </div>
-                        <input type="hidden" name="tempoEmMilissegundos" value=38000>
-                        <input type="hidden" name="idPartida" value="<?php echo $gameId; ?>">
+                        <div class="formInput">
+                            <label for="tempoEmMilissegundos">Tempo em milissegundos</label>
+                            <input name="tempoEmMilissegundos" id="tempoEmMilissegundos" type="number">
+                        </div>
+                        <input type="hidden" name="idPartida" value="<?php echo $_GET['idPartida']; ?>">
 
 
                         <div class="submmitContainer">
@@ -110,26 +111,30 @@ $gameId = isset($_GET['gameId']) ? $_GET['gameId'] : null;
 <?php
 if (isset($_POST['add_gols'])) {
     $golId = uniqid();
-    $idPartida = mysqli_real_escape_string($connection, $_POST['gameId']);
+    $idPartida = mysqli_real_escape_string($connection, $_POST['idPartida']);
     $idJogadorMarcou = mysqli_real_escape_string($connection, $_POST['idJogadorMarcou']);
-    $idJogadorAssistencia = mysqli_real_escape_string($connection, $_POST['idJogadorAssistencia']);
-    echo "idJogadorAssistencia: $idJogadorAssistencia"; // Add this line for debugging
-    if ($idJogadorAssistencia === 'null') {
-        $idJogadorAssistencia = null;
+    $idJogadorAssistencia = null;
+    if (isset($_POST['idJogadorAssistencia']) && $_POST['idJogadorAssistencia'] != '') {
+        $idJogadorAssistencia = mysqli_real_escape_string($connection, $_POST['idJogadorAssistencia']);
     }
     $anulado = mysqli_real_escape_string($connection, $_POST['anulado']);
     $penalti = mysqli_real_escape_string($connection, $_POST['pnalti']);
     $tempo = mysqli_real_escape_string($connection, $_POST['tempoEmMilissegundos']);
 
 
+    $idAssistencia = !empty($idJogadorAssistencia) ? "'$idJogadorAssistencia'" : "NULL";
+
     $sqlAddGols = "INSERT INTO TBGol(id, idPartida, idJogadorMarcou, idJogadorAssistencia, anulado, pnalti, tempoEmMilissegundos)
             VALUES
-                ('$golId', '$idPartida', '$idJogadorMarcou' ,'$idJogadorAssistencia', '$anulado', '$penalti', '$tempo');";
+                ('$golId', '$idPartida', '$idJogadorMarcou', $idAssistencia, '$anulado', '$penalti', '$tempo');";
+
 
     $addGols = mysqli_query($connection, $sqlAddGols);
 
     if (!$addGols) {
         echo '<b>Error</b>';
+    } else {
+        header("Location: ../../../");
     }
 }
 mysqli_close($connection);
