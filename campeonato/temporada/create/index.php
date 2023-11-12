@@ -50,10 +50,12 @@ include("../../../banco/connection.php");
                 <div class="formInput">
                     <label for="dataInicio">Data de início da temporada:</label>
                     <input type="date" id="dataInicio" name="dataInicio">
+                    <span>Mensagem de erro...</span>
                 </div>
                 <div class="formInput">
                     <label for="dataFim">Data de término da temporada:</label>
                     <input type="date" id="dataFim" name="dataFim">
+                    <span>Mensagem de erro...</span>
                 </div>
                 <div class="submmitContainer">
                     <button type="submit" id="btn" name="create_temporada"> Cadastrar Temporada </button>

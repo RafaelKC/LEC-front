@@ -94,8 +94,18 @@
 
                     <div class="formInput">
                         <label for="escola">Escola:</label>
-                        <input type="text" id="idEscola" name="idEscola" value="">
-                        <span>Aqui vai a mensagem de erro....</span>
+                        <select name="escola" id="escola">
+                            <?php
+                                $sql = "SELECT id, nome FROM LEC.TBEscola";
+                                $result = mysqli_query($connection, $sql);
+                                $resultCheck = mysqli_num_rows($result);
+                                if($resultCheck > 0) {
+                                while($row = mysqli_fetch_assoc($result)) {
+                                    echo '<option value="'.$row['id'].'">'.$row['nome'].'</option>';
+                                }
+                            }
+                            ?>
+                            </select>
                     </div>
 
                     <div class="submmitContainer">
@@ -120,17 +130,18 @@
     if(isset($_POST['create_jogador'])) {
         $jogadorId = uniqid();
         $nome = mysqli_real_escape_string($connection, $_POST['nome']);
+        $sobrenome = mysqli_real_escape_string($connection, $_POST['sobrenome']);
         $sexo = mysqli_real_escape_string($connection, $_POST['sexo']);
         $birthdate = mysqli_real_escape_string($connection, $_POST['birthdate']);
         $numeroCamisa = mysqli_real_escape_string($connection, $_POST['numeroCamisa']);
         $nomeDeJogo = mysqli_real_escape_string($connection, $_POST['nomeDeJogo']);
         $cpf = mysqli_real_escape_string($connection, $_POST['cpf']);
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
-        $idEscola = mysqli_real_escape_string($connection, $_POST['idEscola']);
+        $idEscola = mysqli_real_escape_string($connection, $_POST['escola']);
 
-        $sqlCreateJogador = "INSERT INTO TBJogador(id, idSexo, cpf, nome, dataNascimento, numeroCamisa, nomeJogo, idEscola)
+        $sqlCreateJogador = "INSERT INTO TBJogador(id, idSexo, cpf, nome, sobrenome, dataNascimento, numeroCamisa, nomeJogo, idEscola)
             VALUES
-                ('$jogadorId', '$sexo', '$cpf' ,'$nome', '$birthdate', '$numeroCamisa', '$nomeDeJogo', '$idEscola');";
+                ('$jogadorId', '$sexo', '$cpf' ,'$nome', '$sobrenome','$birthdate', '$numeroCamisa', '$nomeDeJogo', '$idEscola');";
 
         $createJogador = mysqli_query($connection, $sqlCreateJogador);
 
