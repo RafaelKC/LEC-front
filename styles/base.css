@@ -20,17 +20,18 @@ header {
     color: white;
 }
 
-header > * {
+/* header > * {
     flex: 1;
-}
+} */
 
 #logo {
     height: 10vh;
 }
 
-.logoHeader {
+#logoHeader {
     display: flex;
     justify-content: flex-end;
+    height: 10vh;
 }
 
 a{
@@ -76,4 +77,8 @@ div#footer {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+}
+
+.partidaBtn{
+    background-color: #1A70A2;
 }

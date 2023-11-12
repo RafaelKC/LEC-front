@@ -3,7 +3,7 @@ caption{
     margin: 5px 0 0 0;
 }
 .tabela{
-    background-color: #46b4f3;
+    background-color: #37B4FF;
     color: white;
     width: 50%;
     border: white 3px solid;
@@ -13,6 +13,33 @@ caption{
     background-color: #0475b6;
 }
 
+.tabelaEstatisticas{
+    background-color: #37B4FF;
+    color: white;
+    width: 100%;
+    border: white 3px solid;
+}
+
+.tabelaEstatisticas >caption{
+    background-color: #0475b6;
+}
+
+#extraContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#golsBtn{
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+    border: none;
+    background-color: #1A70A2;
+    color: white;
+    cursor: pointer;
+}
 caption,
 th, 
 td {
@@ -26,10 +53,11 @@ th{
 }
 
 tr:nth-of-type(2n){
-    background-color: #8fc9eb;
+    background-color: #91CEF2;
 }
 
 td{
     text-align: center;
     color: black;
 }
+

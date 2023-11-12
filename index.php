@@ -6,6 +6,7 @@ session_start();
 $sql = "SELECT
     CONCAT(Mandante.nome, ' x ', Visitante.nome) AS NomePartida,
     P.data AS DataHoraPartida,
+    P.id as PartidaID,
     P.duracaoMilessegundos AS DuracaoMilliseconds,
     1 AS TemporadaID,
     Campeonato.nome AS CampeonatoNome
@@ -13,7 +14,9 @@ FROM TBPartida P
 JOIN TBEscola Mandante ON P.idMandante = Mandante.id
 JOIN TBEscola Visitante ON P.idVisitante = Visitante.id
 JOIN TBTemporada Temporada ON P.idTemporada = Temporada.id
-JOIN TBCampeonato Campeonato ON Temporada.idCampeonato = Campeonato.id;";
+JOIN TBCampeonato Campeonato ON Temporada.idCampeonato = Campeonato.id
+ORDER BY P.data DESC;";
+
 
 
 
@@ -44,12 +47,12 @@ if (!$resultEscolasParticipantes) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
     </style>
 
-   
+
     <link rel="stylesheet" href="./styles/base.css">
     <link rel="stylesheet" href="styles.css">
 
@@ -65,20 +68,21 @@ if (!$resultEscolasParticipantes) {
             <h1>Liga Esportiva Curitiba</h1>
             <?php
             if (isset($_SESSION['user'])) {
-                echo '<h3>'.$_SESSION['user']['nome'].'</h3>';
+                echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
             }
             ?>
         </div>
         <div class="options">
             <?php
-                if (!isset($_SESSION['user'])) {
-                    echo '<a class="headerSegundario" href="/LEC-front/login">Login</a>';
-                    echo '<a class="headerSegundario" href="/LEC-front/escola/create/">Cadastrar escola</a>';
-                    echo '<a class="headerSegundario">Cadastrar patrocinador </a>';
-                } else {
-                    echo '<a class="headerSegundario" href="/LEC-front/sair">Sair</a>';
-                }
-                echo '<a class="headerSegundario" href="/LEC-front/sobre">Sobre</a>';
+            if (!isset($_SESSION['user'])) {
+                echo '<a class="headerSegundario" href="/LEC-front/login">Login</a>';
+                echo '<a class="headerSegundario" href="/LEC-front/escola/create/">Cadastrar escola</a>';
+                echo '<a class="headerSegundario">Cadastrar patrocinador </a>';
+                echo '<a class="headerSegundario" href="/LEC-front/escola/gol"> Cadastrar gols</a>';
+            } else {
+                echo '<a class="headerSegundario" href="/LEC-front/sair">Sair</a>';
+            }
+            echo '<a class="headerSegundario" href="/LEC-front/sobre">Sobre</a>';
             ?>
         </div>
         <div class="logoHeader">
@@ -105,6 +109,7 @@ if (!$resultEscolasParticipantes) {
                     echo "<td>" . $row['DataHoraPartida'] . "</td>";
                     echo "<td>" . $row['CampeonatoNome'] . "</td>";
                     echo "<td>" . $row['TemporadaID'] . "</td>";
+                    echo '<td><a class="partidaBtn" href="game_details.php?id=' . $row['PartidaID'] . '">Ver mais</a></td>';
                     echo "</tr>";
                 }
                 ?>
