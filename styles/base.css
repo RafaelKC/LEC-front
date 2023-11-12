@@ -20,18 +20,17 @@ header {
     color: white;
 }
 
-/* header > * {
+header > * {
     flex: 1;
-} */
+}
 
 #logo {
     height: 10vh;
 }
 
-#logoHeader {
+.logoHeader {
     display: flex;
     justify-content: flex-end;
-    height: 10vh;
 }
 
 a{

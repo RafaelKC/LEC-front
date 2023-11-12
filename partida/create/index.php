@@ -1,5 +1,5 @@
 <?php
-include('../banco/connection.php');
+include('../../banco/connection.php');
 $campeonatoSelecionado = false;
 
 session_start();
@@ -16,10 +16,10 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap' rel='stylesheet'>
-    <link rel="stylesheet" href="../styles/base.css">
-    <link rel="stylesheet" href="../styles/fomInput.css">
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="icon" type="image/png" href="../assets/logotipo.png" sizes="16x16">
+    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../styles/fomInput.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../../assets/logotipo.png" sizes="16x16">
 
     <script src="script.js"></script>
 
@@ -49,29 +49,31 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
             ?>
         </div>
         <div class="logoHeader">
-            <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">
+            <img id="logo" alt="Logo LEC" src="../../assets/logotipo.png">
         </div>
     </header>
     <main>
         <div class="preCadastroContainer">
 
-            <div id="formularioContainer">
-                <div id="titulo">
+            <div class="formularioContainer">
+                <div class="titulo">
                     <h3>SELECIONE O CAMPEONATO</h3>
                 </div>
-                <div id="campeonatoForm">
-                    <div id="campeonatoSelectForm">
+                <div>
+                    <div>
                         <div class="formInput">
-                            <label for="campeonato">Selecione o Campeonato:</label>
+                            <label for="campeonatoInput">Selecione o Campeonato</label>
                             <select name="campeonato" id="campeonatoInput">
                                 <?php
-                                $idCamepeonato = $_GET['idCampeonato'];
+                                $idEscoa = $_SESSION['user']['id'];
+
                                 $sqlCampeonato = "
                                 SELECT c.id, c.nome FROM TBCampeonato c
                                 JOIN TBParticipacaoCampeonato pc ON c.id = pc.idCampeonato
-                                WHERE pc.idEscola = '$idCamepeonato'
+                                WHERE pc.idEscola = '$idEscoa'
                                 AND pc.administrador = TRUE;
                                 ";
+
                                 $resultCampeonato = mysqli_query($connection, $sqlCampeonato);
                                 $resultCheckCampeonato = mysqli_num_rows($resultCampeonato);
                                 if ($resultCheckCampeonato > 0) {
@@ -82,15 +84,15 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                                 ?>
                             </select>
                         </div>
-                        <div id="submmitContainer">
-                            <button onclick="setInputsPrecadastro()">Selecionar Campeonato</button>
+                        <div class="submmitContainer">
+                            <button type="button" onclick="setInputsPrecadastro()">Selecionar Campeonato</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="formularioContainer" <?php echo isset($_GET['idCampeonato']) ? '' : 'style="display: none;"'; ?>>
-                <div id="titulo">
+            <div class="formularioContainer" <?php echo isset($_GET['idCampeonato']) ? '' : 'style="display: none;"'; ?>>
+                <div class="titulo">
                     <h3>SELECIONE UMA TEMPORADA</h3>
                 </div>
                 <div>
@@ -112,8 +114,8 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                                 ?>
                             </select>
                         </div>
-                        <div id="submmitContainer">
-                            <button onclick="setInputsPrecadastro()">Selecionar
+                        <div class="submmitContainer">
+                            <button type="button" onclick="setInputsPrecadastro()">Selecionar
                                 Temporada</button>
                         </div>
                     </div>
@@ -121,8 +123,8 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
             </div>
         </div>
 
-        <div id="formularioContainer" <?php echo isset($_GET['idCampeonato']) && isset($_GET['idTemporada']) ? '' : 'style="display: none;"'; ?>>
-            <div id="titulo">
+        <div class="formularioContainer" <?php echo isset($_GET['idCampeonato']) && isset($_GET['idTemporada']) ? '' : 'style="display: none;"'; ?>>
+            <div class="titulo">
                 <h3>REGISTRO DE PARTIDA</h3>
             </div>
             <div id="formulario">
@@ -165,7 +167,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                         <label for="data">Data da partida</label>
                         <input type="date" id="partidaData" name="partidaData">
                     </div>
-                    <div id="submmitContainer">
+                    <div class="submmitContainer">
                         <button type="submit" id="btn" name="create_partida"> Continuar </button>
                     </div>
     </main>

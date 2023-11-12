@@ -1,5 +1,5 @@
 <?php
-include('../../banco/connection.php');
+include('../../../banco/connection.php');
 
 // Assuming you have code to handle form submission, you can add it here.
 
@@ -18,8 +18,8 @@ include('../../banco/connection.php');
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
     </style>
 
-    <link rel="stylesheet" href="../../styles/base.css">
-    <link rel="stylesheet" href="../../styles/fomInput.css">
+    <link rel="stylesheet" href="../../../styles/base.css">
+    <link rel="stylesheet" href="../../../styles/fomInput.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="icon" type="image/png" href="assets/logotipo.png" sizes="16x16">
@@ -32,11 +32,13 @@ include('../../banco/connection.php');
         <div>
             <h1>Liga Esportiva Curitiba</h1>
         </div>
-        <img id="logoHeader" alt="Logo LEC" src="./assets/logotipo.png">
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="../../../assets/logotipo.png">
+        </div>
     </header>
     <main>
-        <div id="formularioContainer">
-            <div id="titulo">
+        <div class="formularioContainer">
+            <div class="titulo">
                 <h3>Adicionar Gols</h3>
             </div>
             <div id="formulario">
@@ -81,7 +83,7 @@ include('../../banco/connection.php');
 
 
 
-                    <div id="submmitContainer">
+                    <div class="submmitContainer">
                         <button id="btn" type="submit">Adicionar Gol</button>
                     </div>
 

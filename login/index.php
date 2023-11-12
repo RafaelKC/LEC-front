@@ -27,12 +27,14 @@
         <div>
             <h1>Liga Esportiva Curitiba</h1>
         </div>
-        <img id="logoHeader" alt="Logo LEC" src="../assets/logotipo.png">
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">
+        </div>
     </header>
 
     <main>
-        <div id="formularioContainer">
-            <div id="titulo">
+        <div class="formularioContainer">
+            <div class="titulo">
                 <h3>LOGIN</h3>
             </div>
 
@@ -50,7 +52,7 @@
                         <span>Aqui vai a mensagem de erro....</span>
                     </div>
 
-                    <div id="submmitContainer">
+                    <div class="submmitContainer">
                         <button type="submit" id="btn" name="login"> Continuar </button>
                     </div>
                 </form>
@@ -78,9 +80,6 @@ if (isset($_POST['login'])) {
     $resultEscolaCheck = mysqli_num_rows($resultEscola);
     $escola = mysqli_fetch_assoc($resultEscola);
 
-    $resultEscolaCheck = mysqli_num_rows($resultEscola);
-    $escola = mysqli_fetch_assoc($resultEscola);
-
     $sqlPatrocinador = "SELECT * FROM LEC.TBPatrocinador WHERE email = '$email' AND senha = '$senha';";
     $resultPatrocinador = mysqli_query($connection, $sqlPatrocinador);
 
@@ -91,6 +90,7 @@ if (isset($_POST['login'])) {
         $escola['type'] = 'ESCOLA';
         $_SESSION['user'] = $escola;
     } elseif ($resultPatrocinadorCheck == 1) {
+        echo 'patrocinador';
         $patrocinador['type'] = 'PATROCINADOR';
         $_SESSION['user'] = $patrocinador;
     } else {

@@ -61,7 +61,7 @@
               <li>
                 Organização de Campeonatos Escolares: No LEC, oferecemos uma
                 plataforma centralizada para a organização de campeonatos
-                escolares de diversas modalidades esportivas, jogos de
+                escolares de diversas modalidades esportivas, partidas de
                 conhecimento, arte e muito mais. Escolas de toda Curitiba podem
                 inscrever suas equipes e competir em torneios emocionantes.
               </li>

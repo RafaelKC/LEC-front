@@ -26,12 +26,14 @@
         <div>
             <h1>Liga Esportiva Curitiba</h1>
         </div>
-        <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="../../assets/logotipo.png">
+        </div>
     </header>
 
     <main>
-        <div id="formularioContainer">
-            <div id="titulo">
+        <div class="formularioContainer">
+            <div class="titulo">
                 <h3>CADASTRO DE ESCOLA</h3>
             </div>
             <div id="formulario">
@@ -137,7 +139,7 @@
                                 <li>A senha deve ter ao menos um caracter especial</li>
                             </ul>
                         </div>
-                        <div id="submmitContainer">
+                        <div class="submmitContainer">
                             <button type="submit" id="btn" name="cadastro_escola"> Continuar </button>
                         </div>
                     </div>

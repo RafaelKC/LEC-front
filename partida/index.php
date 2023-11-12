@@ -1,5 +1,5 @@
 <?php
-include('./banco/connection.php');
+    include('../banco/connection.php');
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +13,11 @@ include('./banco/connection.php');
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
     </style>
 
-    <link rel="stylesheet" href="./styles/base.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <link rel="icon" type="image/png" href="assets/logotipo.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="../assets/logotipo.png" sizes="16x16">
     <title>Cadastro de Aluno</title>
     <script type="module" src="./index.js"></script>
 </head>
@@ -27,7 +27,9 @@ include('./banco/connection.php');
         <div>
             <h1>Liga Esportiva Curitiba</h1>
         </div>
-        <img id="logoHeader" alt="Logo LEC" src="./assets/logotipo.png">
+        <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">
+        </div>
     </header>
     <main>
         <?php
@@ -134,7 +136,7 @@ include('./banco/connection.php');
                         ?>
                     </table>
                     <div id="extraContainer">
-                        <a href="/LEC-front/escola/gol/add_goals.php?id=<?php echo $gameId; ?>">
+                        <a href="/LEC-front/partida/gol/create?id=<?php echo $gameId; ?>">
                             <button id="golsBtn">Clique aqui para adicionar gols</button>
                         </a>
                     </div>

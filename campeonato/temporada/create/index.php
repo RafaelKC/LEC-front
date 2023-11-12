@@ -11,8 +11,8 @@ include("../../banco/connection.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap' rel='stylesheet'>
-    <link rel="stylesheet" href="../../styles/fomInput.css">
-    <link rel="stylesheet" href="../../styles/base.css">
+    <link rel="stylesheet" href="../../../styles/fomInput.css">
+    <link rel="stylesheet" href="../../../styles/base.css">
     <script type="module" src="script.js"></script>
     <title>Document</title>
 </head>
@@ -20,13 +20,15 @@ include("../../banco/connection.php");
     <div>
         <h1>Liga Esportiva Curitiba</h1>
     </div>
-    <img id="logoHeader" alt="Logo LEC" src="../../assets/logotipo.png">
+    <div class="logoHeader">
+            <img id="logo" alt="Logo LEC" src="assets/logotipo.png">
+        </div>
 </header>
 <main>
-    <div id="formularioContainer">
+    <div class="formularioContainer">
 
 
-        <div id="titulo">
+        <div class="titulo">
             <h3>Cadastro de temporada</h1>
         </div>
         <div id="formulario">
@@ -53,7 +55,7 @@ include("../../banco/connection.php");
                     <label for="dataFim">Data de término da temporada:</label>
                     <input type="date" id="dataFim" name="dataFim">
                 </div>
-                <div id="submmitContainer">
+                <div class="submmitContainer">
                     <button type="submit" id="btn" name="create_temporada"> Cadastrar Temporada </button>
                 </div>
             </form>

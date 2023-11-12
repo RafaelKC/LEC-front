@@ -1,3 +1,4 @@
 .preCadastroContainer {
     display: flex;
+    justify-content: space-evenly;
 }

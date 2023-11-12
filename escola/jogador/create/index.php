@@ -26,8 +26,8 @@
     </header>
 
     <main>
-        <div id="formularioContainer">
-            <div id="titulo">
+        <div class="formularioContainer">
+            <div class="titulo">
                 <h3>CADASTRO DE ALUNO</h3>
             </div>
             <div id="formulario">
@@ -96,7 +96,7 @@
                         <span>Aqui vai a mensagem de erro....</span>
                     </div>
 
-                    <div id="submmitContainer">
+                    <div class="submmitContainer">
                         <button type="submit" id="btn" name="create_jogador"> Continuar </button>
                     </div>
             </div>

@@ -2,7 +2,7 @@
     font-family: 'Inter', sans-serif;
 }
 
-#formularioContainer {
+.formularioContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,7 +12,7 @@
     z-index: 1;
 }
 
-#titulo h3 {
+.titulo h3 {
     margin: 32px;
     font-size: 32px;
     color: #1A70A2;
@@ -85,13 +85,13 @@
     grid-template-columns: 2fr 3fr 1fr;
 }
 
-#submmitContainer {
+.submmitContainer {
     margin-top: 8px;
     display: flex;
     justify-content: flex-end;
 }
 
-#submmitContainer button {
+.submmitContainer button {
     padding: 8px;
     border: none;
     background-color: #1A70A2;
