@@ -29,7 +29,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
 <body>
     <header>
         <div>
-            <h1>Liga Esportiva Curitiba</h1>
+            <h1><a class="homeLink" href="../../">Liga Esportiva Curitiba</a></h1>
             <?php
             if (isset($_SESSION['user'])) {
                 echo '<h3>'.$_SESSION['user']['nome'].'</h3>';

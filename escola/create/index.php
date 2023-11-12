@@ -24,7 +24,7 @@
 <body>
     <header>
         <div>
-            <h1>Liga Esportiva Curitiba</h1>
+            <h1><a class="homeLink" href="../../">Liga Esportiva Curitiba</a></h1>
         </div>
         <div class="logoHeader">
             <img id="logo" alt="Logo LEC" src="../../assets/logotipo.png">

@@ -81,3 +81,7 @@ div#footer {
 .partidaBtn{
     background-color: #1A70A2;
 }
+
+.homeLink {
+    cursor: pointer;
+}

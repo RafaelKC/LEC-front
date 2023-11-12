@@ -1,5 +1,6 @@
 <?php
     include('../banco/connection.php');
+    session_start();
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +26,14 @@
 <body>
     <header>
         <div>
-            <h1>Liga Esportiva Curitiba</h1>
+            <div>
+                <h1><a class="homeLink" href="../">Liga Esportiva Curitiba</a></h1>
+                <?php
+                if (isset($_SESSION['user'])) {
+                    echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
+                }
+                ?>
+            </div>
         </div>
         <div class="logoHeader">
             <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">

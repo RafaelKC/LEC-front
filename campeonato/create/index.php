@@ -1,5 +1,5 @@
 <?php
-include("../banco/connection.php")
+include("../../banco/connection.php")
 ?>
 
 <!DOCTYPE html>
@@ -9,8 +9,8 @@ include("../banco/connection.php")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap' rel='stylesheet'>
-    <link rel="stylesheet" href="../styles/fomInput.css">
-    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../../styles/fomInput.css">
+    <link rel="stylesheet" href="../../styles/base.css">
     <script type="module" src="script.js"></script>
     <title>Document</title>
 </head>
@@ -18,10 +18,10 @@ include("../banco/connection.php")
 <body>
     <header>
         <div>
-            <h1>Liga Esportiva Curitiba</h1>
+            <h1><a class="homeLink" href="../..">Liga Esportiva Curitiba</a></h1>
         </div>
         <div class="logoHeader">
-            <img id="logo" alt="Logo LEC" src="../assets/logotipo.png">
+            <img id="logo" alt="Logo LEC" src="../../assets/logotipo.png">
         </div>
     </header>
     <main>

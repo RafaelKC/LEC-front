@@ -1,10 +1,6 @@
 <?php
 include('../../../banco/connection.php');
-
-// Assuming you have code to handle form submission, you can add it here.
-
-// For simplicity, I'll just show the form without form submission handling.
-
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +26,12 @@ include('../../../banco/connection.php');
 <body>
     <header>
         <div>
-            <h1>Liga Esportiva Curitiba</h1>
+            <h1><a class="homeLink" href="../../../">Liga Esportiva Curitiba</a></h1>
+            <?php
+            if (isset($_SESSION['user'])) {
+                echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
+            }
+            ?>
         </div>
         <div class="logoHeader">
             <img id="logo" alt="Logo LEC" src="../../../assets/logotipo.png">

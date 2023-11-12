@@ -59,13 +59,12 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
         <link rel="icon" type="image/png" href="assets/logotipo.png" sizes="16x16">
         <title>Cadastro de Aluno</title>
-        <script type="module" src="./index.js"></script>
     </head>
 
     <body>
         <header>
             <div>
-                <h1>Liga Esportiva Curitiba</h1>
+                <h1><a class="homeLink" href="./">Liga Esportiva Curitiba</a></h1>
                 <?php
                 if (isset($_SESSION['user'])) {
                     echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
@@ -90,7 +89,7 @@
         </header>
 
         <main>
-            <div style="display: flex; width: 100%;">
+            <div class="tables">
                 <table class="tabela" style="flex: 1;">
                     <caption>
                         Lista de partidas
@@ -100,6 +99,7 @@
                         <th>Data dos partidas:</th>
                         <th>Campeonato:</th>
                         <th>Temporada:</th>
+                        <th>Ações:</th>
                     </tr>
                     <?php
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -113,7 +113,7 @@
                     }
                     ?>
                 </table>
-                <table class="tabela" style="flex: 1;">
+                <table class="tabela" >
                     <caption>
                         Escolas participantes
                     </caption>
