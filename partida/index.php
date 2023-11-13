@@ -13,17 +13,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
     </style>
-
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="icon" type="image/png" href="../assets/logotipo.png" sizes="16x16">
-    <title>Cadastro de Aluno</title>
+    <title>Estatísticas da Partida</title>
     <script type="module" src="./index.js"></script>
 </head>
 
@@ -47,6 +44,24 @@
         <?php
         if (isset($_GET['id'])) {
             $gameId = $_GET['id'];
+
+            $userId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : null;
+            $sqlIsSchoolAdmin = "SELECT COUNT(*) AS count
+                    FROM TBEscola Escola
+                    JOIN TBParticipacaoCampeonato Participacao ON Escola.id = Participacao.idEscola
+                    JOIN TBCampeonato Campeonato ON Participacao.idCampeonato = Campeonato.id
+                    WHERE Escola.id = '$userId'
+                    AND Participacao.administrador = 1
+                    AND Campeonato.id = (
+                        SELECT Temporada.idCampeonato
+                        FROM TBPartida P
+                        JOIN TBTemporada Temporada ON P.idTemporada = Temporada.id
+                        WHERE P.id = '$gameId'
+                    )
+                    LIMIT 1";
+
+            $resultIsSchoolAdmin = mysqli_query($connection, $sqlIsSchoolAdmin);
+            $isSchoolAdmin = $resultIsSchoolAdmin ? (mysqli_fetch_assoc($resultIsSchoolAdmin)['count'] > 0) : false;
 
             $sqlGameDetails = "SELECT
             CONCAT(Mandante.nome, ' x ', Visitante.nome) AS NomePartida,
@@ -73,7 +88,7 @@
                     ?>
 
                     <table class="tabelaEstatisticas">
-                        <caption>Estatísticas do Partida</caption>
+                        <caption>Estatísticas da Partida</caption>
                         <tr>
                             <th>Partida</th>
                             <th>Data e Hora</th>
@@ -141,14 +156,12 @@
                                         <?php echo formatMilliseconds($goal['tempoEmMilissegundos']); ?>
                                     </td>
                                     <?php
-                                        if (isset($_SESSION['user']) && $_SESSION['user']['type'] == 'ESCOLA') {
-                                            echo '
-                                            <td>
-                                            
-                                            
-                                                <a href="gol/delete?idGol='.$goal['id'].'&idPartida='.$gameId.'">Deletar</a>
-                                            </td>';
-                                        }
+                                    if ($isSchoolAdmin) {
+                                        echo '
+                                        <td>
+                                            <a href="gol/delete?idGol='.$goal['id'].'&idPartida='.$gameId.'">Deletar</a>
+                                        </td>';
+                                    }
                                     ?>
                                 </tr>
                                 <?php
@@ -159,14 +172,14 @@
                         ?>
                     </table>
                     <?php
-                        if (isset($_SESSION['user']) && $_SESSION['user']['type'] == 'ESCOLA') {
-                            echo '
-                            <div id="extraContainer">
-                                <a href="/LEC-front/partida/gol/create?idPartida='.$gameId.'">
-                                    <button id="golsBtn">Clique aqui para adicionar gols</button>
-                                </a>
-                            </div>';
-                        }
+                    if ($isSchoolAdmin) {
+                        echo '
+                        <div id="extraContainer">
+                            <a href="/LEC-front/partida/gol/create?idPartida='.$gameId.'">
+                                <button id="golsBtn">Clique aqui para adicionar gols</button>
+                            </a>
+                        </div>';
+                    }
                     ?>
 
                     <?php
