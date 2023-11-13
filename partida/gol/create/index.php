@@ -2,6 +2,7 @@
     include('../../../banco/connection.php');
     session_start();
     if (!isset($_SESSION['user']) || !isset($_GET['idPartida'])) {
+        header('Location: ../../../');
     }
 ?>
 
@@ -134,7 +135,7 @@ if (isset($_POST['add_gols'])) {
     if (!$addGols) {
         echo '<b>Error</b>';
     } else {
-        header("Location: ../../../");
+        header("Location: ../../?id=".$_GET['idPartida']);
     }
 }
 mysqli_close($connection);

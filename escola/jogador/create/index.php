@@ -1,5 +1,36 @@
 <?php
-  include('../../../banco/connection.php');
+    include('../../../banco/connection.php');
+
+    session_start();
+    if (!isset($_SESSION['user'])) {
+        header('Location: ../../');
+    }
+
+    if(isset($_POST['create_jogador'])) {
+        $jogadorId = uniqid();
+        $nome = mysqli_real_escape_string($connection, $_POST['nome']);
+        $sobrenome = mysqli_real_escape_string($connection, $_POST['sobrenome']);
+        $sexo = mysqli_real_escape_string($connection, $_POST['sexo']);
+        $birthdate = mysqli_real_escape_string($connection, $_POST['birthdate']);
+        $numeroCamisa = mysqli_real_escape_string($connection, $_POST['numeroCamisa']);
+        $nomeDeJogo = mysqli_real_escape_string($connection, $_POST['nomeDeJogo']);
+        $cpf = mysqli_real_escape_string($connection, $_POST['cpf']);
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        $idEscola = mysqli_real_escape_string($connection, $_POST['escola']);
+
+        $sqlCreateJogador = "INSERT INTO TBJogador(id, idSexo, cpf, nome, sobrenome, dataNascimento, numeroCamisa, nomeJogo, idEscola)
+                VALUES
+                    ('$jogadorId', '$sexo', '$cpf' ,'$nome', '$sobrenome','$birthdate', '$numeroCamisa', '$nomeDeJogo', '$idEscola');";
+
+        $createJogador = mysqli_query($connection, $sqlCreateJogador);
+
+        if(!$createJogador){
+            echo '<b>Error</b>';
+        } else {
+            header('Location: ../../?id='.$_SESSION['user']['id']);
+            exit();
+        }
+    }
 ?>
 
 
@@ -67,7 +98,7 @@
                         </div>
                         <div class="formInput">
                             <label for="data de nascimento">Data de nascimento:</label>
-                            <input type="date" id="birthdate" name="birthdate">
+                            <input type="date" id="data de nascimento" name="birthdate">
                             <span>Aqui vai a mensagem de erro....</span>
                         </div>
                     </div>
@@ -93,19 +124,7 @@
                     </div>
 
                     <div class="formInput">
-                        <label for="escola">Escola:</label>
-                        <select name="escola" id="escola">
-                            <?php
-                                $sql = "SELECT id, nome FROM LEC.TBEscola";
-                                $result = mysqli_query($connection, $sql);
-                                $resultCheck = mysqli_num_rows($result);
-                                if($resultCheck > 0) {
-                                while($row = mysqli_fetch_assoc($result)) {
-                                    echo '<option value="'.$row['id'].'">'.$row['nome'].'</option>';
-                                }
-                            }
-                            ?>
-                            </select>
+                        <input type="hidden" name="escola" id="escola" value="<?php echo $_SESSION['user']['id'] ?>" />
                     </div>
 
                     <div class="submmitContainer">
@@ -125,29 +144,3 @@
 </body>
 
 </html>
-
-<?php
-    if(isset($_POST['create_jogador'])) {
-        $jogadorId = uniqid();
-        $nome = mysqli_real_escape_string($connection, $_POST['nome']);
-        $sobrenome = mysqli_real_escape_string($connection, $_POST['sobrenome']);
-        $sexo = mysqli_real_escape_string($connection, $_POST['sexo']);
-        $birthdate = mysqli_real_escape_string($connection, $_POST['birthdate']);
-        $numeroCamisa = mysqli_real_escape_string($connection, $_POST['numeroCamisa']);
-        $nomeDeJogo = mysqli_real_escape_string($connection, $_POST['nomeDeJogo']);
-        $cpf = mysqli_real_escape_string($connection, $_POST['cpf']);
-        $cpf = preg_replace('/[^0-9]/', '', $cpf);
-        $idEscola = mysqli_real_escape_string($connection, $_POST['escola']);
-
-        $sqlCreateJogador = "INSERT INTO TBJogador(id, idSexo, cpf, nome, sobrenome, dataNascimento, numeroCamisa, nomeJogo, idEscola)
-            VALUES
-                ('$jogadorId', '$sexo', '$cpf' ,'$nome', '$sobrenome','$birthdate', '$numeroCamisa', '$nomeDeJogo', '$idEscola');";
-
-        $createJogador = mysqli_query($connection, $sqlCreateJogador);
-
-        if(!$createJogador){
-            echo '<b>Error</b>';
-        }
-    }
-    mysqli_close($connection);
-?>

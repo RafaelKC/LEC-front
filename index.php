@@ -67,7 +67,11 @@
                 <h1><a class="homeLink" href="./">Liga Esportiva Curitiba</a></h1>
                 <?php
                 if (isset($_SESSION['user'])) {
-                    echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
+                    if ($_SESSION['user']['type'] == 'PATROCINADOR') {
+                        echo '<h3>' . $_SESSION['user']['nome'] . '</h3>';
+                    } else {
+                        echo '<h3><a href="./escola?id='. $_SESSION['user']['id'].'">' . $_SESSION['user']['nome'] . '</a></h3>';
+                    }
                 }
                 ?>
             </div>
@@ -123,7 +127,7 @@
                     <?php
                     while ($row = mysqli_fetch_assoc($resultEscolasParticipantes)) {
                         echo "<tr>";
-                        echo "<td>" . $row['nome'] . "</td>";
+                        echo "<td><a href='./escola?id=".$row['id']."'>" . $row['nome'] . "</a></td>";
                         echo "</tr>";
                     }
                     ?>

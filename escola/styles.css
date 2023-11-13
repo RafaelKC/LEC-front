@@ -1,0 +1,87 @@
+main#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.escolaNome > * {
+    font-size: 28px;
+    color: #1A70A2;
+    text-transform: uppercase;
+}
+
+.escolaNome {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    width: 70%;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.container > * {
+    width: 100%;
+}
+
+.sectionsHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1A70A2;
+    height: 40px;
+}
+
+.sectionsHeader > * {
+    color: white;
+}
+
+caption{
+    background-color: #0475b6;
+}
+
+caption,
+th,
+td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th{
+    background-color: #0475b6;
+}
+
+tr:nth-of-type(2n){
+    background-color: #91CEF2;
+}
+
+tr {
+    height: 32px;
+}
+
+td{
+    text-align: center;
+    color: black;
+}
+
+.acoes {
+    color: black;
+}
+
+.patrocinadorBtn {
+    background-color: #1A70A2;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.deixarPatrocinar {
+    background-color: #FF0000;
+}

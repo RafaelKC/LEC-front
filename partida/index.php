@@ -108,6 +108,7 @@
                             <th>Anulado</th>
                             <th>Penalti</th>
                             <th>Tempo da partida</th>
+                            <th>Ações</th>
                         </tr>
                         <?php
                         $sqlGoals = "SELECT
@@ -139,6 +140,16 @@
                                     <td>
                                         <?php echo formatMilliseconds($goal['tempoEmMilissegundos']); ?>
                                     </td>
+                                    <?php
+                                        if (isset($_SESSION['user']) && $_SESSION['user']['type'] == 'ESCOLA') {
+                                            echo '
+                                            <td>
+                                            
+                                            
+                                                <a href="gol/delete?idGol='.$goal['id'].'&idPartida='.$gameId.'">Deletar</a>
+                                            </td>';
+                                        }
+                                    ?>
                                 </tr>
                                 <?php
                             }
