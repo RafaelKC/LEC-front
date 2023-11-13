@@ -73,9 +73,9 @@
                     ?>
 
                     <table class="tabelaEstatisticas">
-                        <caption>Estatísticas do jogo</caption>
+                        <caption>Estatísticas do Partida</caption>
                         <tr>
-                            <th>Jogo</th>
+                            <th>Partida</th>
                             <th>Data e Hora</th>
                             <th>Campeonato</th>
                             <th>Mandante</th>
@@ -171,7 +171,7 @@
 
                     <?php
                 } else {
-                    echo "Não encontramos esse jogo :(.";
+                    echo "Não encontramos essa partida :(.";
                 }
             } else {
                 die("Query failed: " . mysqli_error($connection));
