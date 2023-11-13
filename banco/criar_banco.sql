@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS TBEndereco (
     cidade VARCHAR(100) NOT NULL,
     uf CHAR(2) NOT NULL,
     UNIQUE (id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS TBSexo (
     id VARCHAR(36) PRIMARY KEY,
-    UNIQUE (id),
-    descricao VARCHAR(50) NOT NULL
-);
+    descricao VARCHAR(50) NOT NULL,
+    UNIQUE (id)
+    );
 
 CREATE TABLE IF NOT EXISTS TBPatrocinador (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -28,9 +28,17 @@ CREATE TABLE IF NOT EXISTS TBPatrocinador (
     email VARCHAR(50) NOT NULL,
     senha VARCHAR(100) NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idEndereco)
-        REFERENCES TBEndereco (id)
-);
+    UNIQUE (cnpj),
+    UNIQUE (cpf),
+    UNIQUE (email),
+    FOREIGN KEY (idEndereco) REFERENCES TBEndereco (id)
+    );
+
+CREATE TABLE IF NOT EXISTS TBCampeonato (
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    UNIQUE (id)
+    );
 
 CREATE TABLE IF NOT EXISTS TBEscola (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -42,54 +50,28 @@ CREATE TABLE IF NOT EXISTS TBEscola (
     telefoneDois VARCHAR(30),
     idEndereco VARCHAR(36) NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idEndereco)
-        REFERENCES TBEndereco (id)
-);
+    UNIQUE (cnpj),
+    UNIQUE (email),
+    FOREIGN KEY (idEndereco) REFERENCES TBEndereco (id)
+    );
 
--- N x N TbEscola and TBPatrocinador
-CREATE TABLE IF NOT EXISTS TBEscolaPatrocinador (
-    idEscola VARCHAR(36),
-    idPatrocinador VARCHAR(36),
-    FOREIGN KEY (idEscola)
-        REFERENCES TBEscola (id),
-    FOREIGN KEY (idPatrocinador)
-        REFERENCES TBPatrocinador (id),
-    PRIMARY KEY (idEscola , idPatrocinador)
-);
-
-CREATE TABLE IF NOT EXISTS TBCampeonato (
-    id VARCHAR(36) NOT NULL PRIMARY KEY,
-    Nome VARCHAR(150) NOT NULL,
-    NumeroEquipes INT NOT NULL,
-    UNIQUE (id)
-);
-
--- N x N TbCampeonato and TBPatrocinador
+-- N x N TBPatrocinador e TbCampeonato
 CREATE TABLE IF NOT EXISTS TBCampeonatoPatrocinador (
     idCampeonato VARCHAR(36) NOT NULL,
     idPatrocinador VARCHAR(36) NOT NULL,
-    FOREIGN KEY (idCampeonato)
-        REFERENCES TBCampeonato (id),
-    FOREIGN KEY (idPatrocinador)
-        REFERENCES TBPatrocinador (id),
+    FOREIGN KEY (idCampeonato) REFERENCES TBCampeonato (id),
+    FOREIGN KEY (idPatrocinador) REFERENCES TBPatrocinador (id),
     PRIMARY KEY (idCampeonato , idPatrocinador)
-);
+    );
 
-CREATE TABLE IF NOT EXISTS TBJogador (
-    id VARCHAR(36) PRIMARY KEY,
-    idEscola VARCHAR(36) NOT NULL,
-    idSexo VARCHAR(36) NOT NULL,
-    cpf CHAR(11) NOT NULL,
-    nome VARCHAR(150),
-    numeroCamisa INT NOT NULL,
-    dataNascimento DATE NOT NULL,
-    nomeJogo VARCHAR(30) NOT NULL,
-    FOREIGN KEY (idEscola)
-        REFERENCES TBEscola (id),
-    FOREIGN KEY (idSexo)
-        REFERENCES TBSexo (id),
-    UNIQUE (id)
-);
+-- N x N TbEscola e TBPatrocinador
+CREATE TABLE IF NOT EXISTS TBEscolaPatrocinador (
+    idEscola VARCHAR(36),
+    idPatrocinador VARCHAR(36),
+    FOREIGN KEY (idEscola)  REFERENCES TBEscola (id),
+    FOREIGN KEY (idPatrocinador) REFERENCES TBPatrocinador (id),
+    PRIMARY KEY (idEscola , idPatrocinador)
+    );
 
 CREATE TABLE IF NOT EXISTS TBTemporada (
     id VARCHAR(36) PRIMARY KEY,
@@ -97,25 +79,37 @@ CREATE TABLE IF NOT EXISTS TBTemporada (
     dataInicio DATE NOT NULL,
     dataFim DATE NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idCampeonato)
-        REFERENCES TBCampeonato (id)
-);
+    FOREIGN KEY (idCampeonato) REFERENCES TBCampeonato (id)
+    );
 
 CREATE TABLE IF NOT EXISTS TBPartida (
     id VARCHAR(36) PRIMARY KEY,
-    dataHora DATETIME NOT NULL,
+    data DATETIME NOT NULL,
     duracaoMilessegundos INT NOT NULL,
-    mandanteId VARCHAR(36) NOT NULL,
-    visitanteId VARCHAR(36) NOT NULL,
+    idMandante VARCHAR(36) NOT NULL,
+    idVisitante VARCHAR(36) NOT NULL,
     idTemporada VARCHAR(36) NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idTemporada)
-        REFERENCES TBTemporada (id),
-    FOREIGN KEY (mandanteId)
-        REFERENCES TBEscola (id),
-    FOREIGN KEY (visitanteId)
-        REFERENCES TBEscola (id)
-);
+    FOREIGN KEY (idTemporada) REFERENCES TBTemporada (id),
+    FOREIGN KEY (idMandante) REFERENCES TBEscola (id),
+    FOREIGN KEY (idVisitante) REFERENCES TBEscola (id)
+    );
+
+CREATE TABLE IF NOT EXISTS TBJogador (
+    id VARCHAR(36) PRIMARY KEY,
+    idEscola VARCHAR(36) NOT NULL,
+    idSexo VARCHAR(36) NOT NULL,
+    cpf CHAR(11) NOT NULL,
+    nome VARCHAR(150) NOT NULL,
+    sobrenome VARCHAR(150) NOT NULL,
+    numeroCamisa INT NOT NULL,
+    dataNascimento DATE NOT NULL,
+    nomeJogo VARCHAR(30) NOT NULL,
+    UNIQUE (id),
+    UNIQUE (cpf),
+    FOREIGN KEY (idEscola)  REFERENCES TBEscola (id),
+    FOREIGN KEY (idSexo) REFERENCES TBSexo (id)
+    );
 
 CREATE TABLE IF NOT EXISTS TBGol (
     id VARCHAR(36) PRIMARY KEY,
@@ -124,16 +118,12 @@ CREATE TABLE IF NOT EXISTS TBGol (
     idJogadorAssistencia VARCHAR(36) NULL,
     anulado BOOL NOT NULL,
     pnalti BOOL NOT NULL,
-    contra BOOL NOT NULL,
     tempoEmMilissegundos INT NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idJogadorMarcou)
-        REFERENCES TBJogador (id),
-    FOREIGN KEY (idJogadorAssistencia)
-        REFERENCES TBJogador (id),
-    FOREIGN KEY (idPartida)
-        REFERENCES TBPartida (id)
-);
+    FOREIGN KEY (idJogadorMarcou) REFERENCES TBJogador (id),
+    FOREIGN KEY (idJogadorAssistencia) REFERENCES TBJogador (id),
+    FOREIGN KEY (idPartida)  REFERENCES TBPartida (id)
+    );
 
 CREATE TABLE IF NOT EXISTS TBParticipacaoCampeonato (
     id VARCHAR(36) PRIMARY KEY,
@@ -142,32 +132,28 @@ CREATE TABLE IF NOT EXISTS TBParticipacaoCampeonato (
     status INT NOT NULL,
     administrador BOOL NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idCampeonato)
-        REFERENCES TBCampeonato (id),
-    FOREIGN KEY (idEscola)
-        REFERENCES TBEscola (id)
-);
+    FOREIGN KEY (idCampeonato)  REFERENCES TBCampeonato (id),
+    FOREIGN KEY (idEscola) REFERENCES TBEscola (id)
+    );
 
-CREATE TABLE IF NOT EXISTS TBRemocao (
+CREATE TABLE IF NOT EXISTS TBRemocaoEscolaCampeonato (
+    idParticipacaoCampeonato VARCHAR(36),
     sequencia INT,
-    idParticipacao VARCHAR(36),
     tipo INT NOT NULL,
     aplicado BOOL NOT NULL,
-    FOREIGN KEY (idParticipacao)
-        REFERENCES TBParticipacaoCampeonato (id),
-    PRIMARY KEY (idParticipacao , sequencia)
-);
+    FOREIGN KEY (idParticipacaoCampeonato) REFERENCES TBParticipacaoCampeonato (id),
+    PRIMARY KEY (idParticipacaoCampeonato , sequencia)
+    );
 
+-- N x M TBRemocaoEscolaCampeonato e TBParticipacaoCampeonato
 CREATE TABLE IF NOT EXISTS TBVoto (
-    sequencia INT,
     idParticipacao VARCHAR(36),
+    sequencia INT,
     idParticipanteVotador VARCHAR(36),
-    FOREIGN KEY (idParticipacao, sequencia)
-        REFERENCES TBRemocao(idParticipacao , sequencia),
-	FOREIGN KEY (idParticipanteVotador)
-        REFERENCES TBParticipacaoCampeonato(id),
+    FOREIGN KEY (idParticipacao, sequencia) REFERENCES TBRemocaoEscolaCampeonato(idParticipacaoCampeonato , sequencia),
+    FOREIGN KEY (idParticipanteVotador) REFERENCES TBParticipacaoCampeonato(id),
     PRIMARY KEY (idParticipacao , sequencia , idParticipanteVotador)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS TBFalta (
     id VARCHAR(36) PRIMARY KEY,
@@ -176,25 +162,19 @@ CREATE TABLE IF NOT EXISTS TBFalta (
     idJogadorCometeu VARCHAR(36) NOT NULL,
     tempoPartidaMilissegundos INT NOT NULL,
     UNIQUE (id),
-    FOREIGN KEY (idPartida)
-        REFERENCES TBPartida (id),
-    FOREIGN KEY (idJogadorSofreu)
-        REFERENCES TBJogador (id),
-    FOREIGN KEY (idJogadorCometeu)
-        REFERENCES TBJogador (id)
-);
+    FOREIGN KEY (idPartida) REFERENCES TBPartida (id),
+    FOREIGN KEY (idJogadorSofreu) REFERENCES TBJogador (id),
+    FOREIGN KEY (idJogadorCometeu) REFERENCES TBJogador (id)
+    );
 
+
+-- Inserts
 
 SET @enderocoIdUm = UUID();
 SET @enderocoIdDois = UUID();
 SET @enderocoIdTres = UUID();
 SET @enderocoIdQuatro = UUID();
 SET @enderocoIdCinco = UUID();
-SET @enderocoIdSeis = UUID();
-SET @enderocoIdSete = UUID();
-SET @enderocoIdOito = UUID();
-SET @enderocoIdNove = UUID();
-SET @enderocoIdDez = UUID();
 
 -- Inserir dados na tabela TBEndereco
 INSERT INTO TBEndereco (id, cep, logradouro, bairro, cidade, uf)
@@ -203,12 +183,7 @@ VALUES
     (@enderocoIdDois, '23456789', 'Rua B', 'Bairro B', 'Cidade B', 'PR'),
     (@enderocoIdTres, '34567890', 'Rua C', 'Bairro C', 'Cidade C', 'PR'),
     (@enderocoIdQuatro, '45678901', 'Rua D', 'Bairro D', 'Cidade D', 'PR'),
-    (@enderocoIdCinco, '56789012', 'Rua E', 'Bairro E', 'Cidade E', 'PR'),
-    (@enderocoIdSeis, '67890123', 'Rua F', 'Bairro F', 'Cidade F', 'PR'),
-    (@enderocoIdSete, '78901234', 'Rua G', 'Bairro G', 'Cidade G', 'PR'),
-    (@enderocoIdOito, '89012345', 'Rua H', 'Bairro H', 'Cidade H', 'PR'),
-    (@enderocoIdNove, '90123456', 'Rua I', 'Bairro I', 'Cidade I', 'PR'),
-    (@enderocoIdDez, '01234567', 'Rua J', 'Bairro J', 'Cidade J', 'PR');
+    (@enderocoIdCinco, '56789012', 'Rua E', 'Bairro E', 'Cidade E', 'PR');
 
 
 SET @sexoIdUm = UUID();
@@ -227,12 +202,6 @@ SET @escolaIdUm = UUID();
 SET @escolaIdDois = UUID();
 SET @escolaIdTres = UUID();
 SET @escolaIdQuatro = UUID();
-SET @escolaIdCinco = UUID();
-SET @escolaIdSeis = UUID();
-SET @escolaIdSete = UUID();
-SET @escolaIdOito = UUID();
-SET @escolaIdNove = UUID();
-SET @escolaIdDez = UUID();
 
 -- Inserir dados na tabela TBEscola
 INSERT INTO TBEscola (id, nome, cnpj, email, senha, telefoneUm, telefoneDois, idEndereco)
@@ -240,313 +209,490 @@ VALUES
     (@escolaIdUm, 'Escola A', '12345678901234', 'escolaA@email.com', 'senha123', '1234567890', '9876543210', @enderocoIdUm),
     (@escolaIdDois, 'Escola B', '23456789012345', 'escolaB@email.com', 'senha456', '9876543210', '1234567890', @enderocoIdDois),
     (@escolaIdTres, 'Escola C', '34567890123456', 'escolaC@email.com', 'senha789', '1234567890', '9876543210', @enderocoIdTres),
-    (@escolaIdQuatro, 'Escola D', '45678901234567', 'escolaD@email.com', 'senha012', '1234567890', '9876543210', @enderocoIdQuatro),
-    (@escolaIdCinco, 'Escola E', '56789012345678', 'escolaE@email.com', 'senha345', '1234567890', '9876543210', @enderocoIdCinco),
-    (@escolaIdSeis, 'Escola F', '67890123456789', 'escolaF@email.com', 'senha678', '1234567890', '9876543210', @enderocoIdSeis),
-    (@escolaIdSete, 'Escola G', '78901234567890', 'escolaG@email.com', 'senha901', '1234567890', '9876543210', @enderocoIdSete),
-    (@escolaIdOito, 'Escola H', '89012345678901', 'escolaH@email.com', 'senha234', '1234567890', '9876543210', @enderocoIdOito),
-    (@escolaIdNove, 'Escola I', '90123456789012', 'escolaI@email.com', 'senha567', '1234567890', '9876543210', @enderocoIdNove),
-    (@escolaIdDez, 'Escola J', '01234567890123', 'escolaJ@email.com', 'senha890', '1234567890', '9876543210', @enderocoIdDez);
+    (@escolaIdQuatro, 'Escola D', '45678901234567', 'escolaD@email.com', 'senha012', '1234567890', '9876543210', @enderocoIdQuatro);
 
 
 SET @patrocinadorIdUm = UUID();
-SET @patrocinadorIdDois = UUID();
-SET @patrocinadorIdTres = UUID();
-SET @patrocinadorIdQuatro = UUID();
-SET @patrocinadorIdCinco = UUID();
 
 -- Inserir dados na tabela TBPatrocinador
 INSERT INTO TBPatrocinador (id, idEndereco, nome, cnpj, cpf, email, senha)
 VALUES
-    (@patrocinadorIdUm, @enderocoIdUm, 'Patrocinador A', NULL, '12345678901', 'patrocinadorA@email.com', 'senha123'),
-    (@patrocinadorIdDois, @enderocoIdSete, 'Patrocinador B', '23456789012345', NULL, 'patrocinadorB@email.com', 'senha456'),
-    (@patrocinadorIdTres, @enderocoIdNove, 'Patrocinador C', NULL, '34567890123', 'patrocinadorC@email.com', 'senha789'),
-    (@patrocinadorIdQuatro, @enderocoIdOito, 'Patrocinador D', '45678901234567', NULL, 'patrocinadorD@email.com', 'senha012'),
-    (@patrocinadorIdCinco, @enderocoIdQuatro, 'Patrocinador E', '56789012345678', NULL, 'patrocinadorE@email.com', 'senha345');
+    (@patrocinadorIdUm, @enderocoIdUm, 'Patrocinador A', NULL, '12345678901', 'patrocinadorA@email.com', 'senha123');
 
 
 -- Inserir dados na tabela TBEscolaPatrocinador
 INSERT INTO TBEscolaPatrocinador (idEscola, idPatrocinador)
 VALUES
     (@escolaIdUm, @patrocinadorIdUm),
-    (@escolaIdUm, @patrocinadorIdDois),
-    (@escolaIdDois, @patrocinadorIdDois),
-    (@escolaIdTres, @patrocinadorIdTres),
-    (@escolaIdQuatro, @patrocinadorIdQuatro),
-    (@escolaIdCinco, @patrocinadorIdCinco),
-    (@escolaIdSeis, @patrocinadorIdUm),
-    (@escolaIdSete, @patrocinadorIdDois),
-    (@escolaIdOito, @patrocinadorIdTres),
-    (@escolaIdNove, @patrocinadorIdQuatro),
-    (@escolaIdDez, @patrocinadorIdCinco),
-    (@escolaIdDois, @patrocinadorIdUm),
-    (@escolaIdTres, @patrocinadorIdDois),
-    (@escolaIdQuatro, @patrocinadorIdTres),
-    (@escolaIdCinco, @patrocinadorIdQuatro);
+    (@escolaIdDois, @patrocinadorIdUm);
 
 
 SET @campeonatoIdUm = UUID();
-SET @campeonatoIdDois = UUID();
-SET @campeonatoIdTres = UUID();
 
 -- Inserir dados na tabela TBCampeonato
-INSERT INTO TBCampeonato (id, Nome, NumeroEquipes)
+INSERT INTO TBCampeonato (id, Nome)
 VALUES
-    (@campeonatoIdUm, 'Campeonato A', 10),
-    (@campeonatoIdDois, 'Campeonato B', 8),
-    (@campeonatoIdTres, 'Campeonato C', 12);
+    (@campeonatoIdUm, 'Campeonato A');
 
 -- Inserir dados na tabela TBCampeonatoPatrocinador
 INSERT INTO TBCampeonatoPatrocinador (idCampeonato, idPatrocinador)
-VALUES
-    (@campeonatoIdUm, @patrocinadorIdUm),
-    (@campeonatoIdUm, @patrocinadorIdDois),
-    (@campeonatoIdDois, @patrocinadorIdTres),
-    (@campeonatoIdDois, @patrocinadorIdQuatro),
-    (@campeonatoIdDois, @patrocinadorIdDois),
-    (@campeonatoIdTres, @patrocinadorIdUm),
-    (@campeonatoIdTres, @patrocinadorIdCinco);
+VALUES (@campeonatoIdUm, @patrocinadorIdUm);
 
-SET @jogadorIdUm = UUID();        SET @jogadorIdVinteUm= UUID();
-SET @jogadorIdDois = UUID();      SET @jogadorIdVinteDoi = UUID();
-SET @jogadorIdTres = UUID();      SET @jogadorIdVinteTres = UUID(); 
-SET @jogadorIdQuatro = UUID();    SET @jogadorIdVinteQuatro = UUID();
-SET @jogadorIdCinco = UUID();     SET @jogadorIdVinteCinco = UUID();
-SET @jogadorIdSeis= UUID();       SET @jogadorIdVinteSeis = UUID();
-SET @jogadorIdSete = UUID();      SET @jogadorIdVinteSete = UUID();
-SET @jogadorIdOito= UUID();       SET @jogadorIdVinteOito = UUID();
-SET @jogadorIdNove= UUID();       SET @jogadorIdVinteNove = UUID();
-SET @jogadorIdDez = UUID();       SET @jogadorIdTrinta = UUID();
-SET @jogadorIdOnze = UUID();      SET @jogadorIdTrintaUm = UUID();
-SET @jogadorIdDoze = UUID();      SET @jogadorIdTrintaDois = UUID();
-SET @jogadorIdTreze = UUID();     SET @jogadorIdTrintaTres = UUID(); 
-SET @jogadorIdQuatorze = UUID();  SET @jogadorIdTrintaQuatro = UUID();
-SET @jogadorIdQuinze = UUID();    SET @jogadorIdTrintaCinco = UUID();
-SET @jogadorIdDezesseis = UUID(); SET @jogadorIdTrintaSeis = UUID();
-SET @jogadorIdDezesere = UUID();  SET @jogadorIdTrintaSete = UUID();
-SET @jogadorIdDezoito = UUID();   SET @jogadorIdTrintaOito = UUID();
-SET @jogadorIdDezenove = UUID();  SET @jogadorIdTrintaNove = UUID();
-SET @jogadorIdVinte = UUID();     SET @jogadorIdQuarenta = UUID();
+SET @jogadorIdUm = UUID();
+SET @jogadorIdDois = UUID();
+SET @jogadorIdTres = UUID();
+SET @jogadorIdQuatro = UUID();
+SET @jogadorIdCinco = UUID();
+SET @jogadorIdSeis= UUID();
+SET @jogadorIdSete = UUID();
+SET @jogadorIdOito= UUID();
+
 
 -- Inserir dados na tabela TBJogador com jogadores previamente declarados
-INSERT INTO TBJogador (id, idEscola, idSexo, cpf, nome, numeroCamisa, dataNascimento, nomeJogo)
+INSERT INTO TBJogador (id, idEscola, idSexo, cpf, nome, sobrenome, numeroCamisa, dataNascimento, nomeJogo)
 VALUES
-	(@jogadorIdUm, @escolaIdUm, @sexoIdUm, '12345678901', 'Jogador 1', 10, '2000-01-01', 'NomeJogo 1'),
-    (@jogadorIdDois, @escolaIdDois, @sexoIdDois, '23456789012', 'Jogador 2', 11, '2001-01-01', 'NomeJogo 2'),
-    (@jogadorIdTres, @escolaIdTres, @sexoIdTres, '34567890123', 'Jogador 3', 12, '2002-01-01', 'NomeJogo 3'),
-    (@jogadorIdQuatro, @escolaIdQuatro, @sexoIdUm, '45678901234', 'Jogador 4', 13, '2003-01-01', 'NomeJogo 4'),
-    (@jogadorIdCinco, @escolaIdCinco, @sexoIdDois, '56789012345', 'Jogador 5', 14, '2004-01-01', 'NomeJogo 5'),
-    (@jogadorIdSeis, @escolaIdSeis, @sexoIdTres, '67890123456', 'Jogador 6', 15, '2005-01-01', 'NomeJogo 6'),
-    (@jogadorIdSete, @escolaIdSete, @sexoIdUm, '78901234567', 'Jogador 7', 16, '2006-01-01', 'NomeJogo 7'),
-    (@jogadorIdOito, @escolaIdOito, @sexoIdDois, '89012345678', 'Jogador 8', 17, '2007-01-01', 'NomeJogo 8'),
-    (@jogadorIdNove, @escolaIdNove, @sexoIdTres, '90123456789', 'Jogador 9', 18, '2008-01-01', 'NomeJogo 9'),
-    (@jogadorIdDez, @escolaIdDez, @sexoIdUm, '01234567890', 'Jogador 10', 19, '2009-01-01', 'NomeJogo 10'),
-    (@jogadorIdOnze, @escolaIdUm, @sexoIdDois, '11234567890', 'Jogador 11', 20, '2010-01-01', 'NomeJogo 11'),
-    (@jogadorIdDoze, @escolaIdDois, @sexoIdTres, '21234567890', 'Jogador 12', 21, '2011-01-01', 'NomeJogo 12'),
-    (@jogadorIdTreze, @escolaIdTres, @sexoIdUm, '31234567890', 'Jogador 13', 22, '2012-01-01', 'NomeJogo 13'),
-    (@jogadorIdQuatorze, @escolaIdQuatro, @sexoIdDois, '41234567890', 'Jogador 14', 23, '2013-01-01', 'NomeJogo 14'),
-    (@jogadorIdQuinze, @escolaIdCinco, @sexoIdTres, '51234567890', 'Jogador 15', 24, '2014-01-01', 'NomeJogo 15'),
-    (@jogadorIdDezesseis, @escolaIdSeis, @sexoIdUm, '61234567890', 'Jogador 16', 25, '2015-01-01', 'NomeJogo 16'),
-    (@jogadorIdDezesere, @escolaIdSete, @sexoIdDois, '71234567890', 'Jogador 17', 26, '2016-01-01', 'NomeJogo 17'),
-    (@jogadorIdDezoito, @escolaIdOito, @sexoIdTres, '81234567890', 'Jogador 18', 27, '2017-01-01', 'NomeJogo 18'),
-    (@jogadorIdDezenove, @escolaIdNove, @sexoIdUm, '91234567890', 'Jogador 19', 28, '2018-01-01', 'NomeJogo 19'),
-    (@jogadorIdVinte, @escolaIdDez, @sexoIdDois, '01234567891', 'Jogador 20', 29, '2019-01-01', 'NomeJogo 20'),
-    (@jogadorIdVinteUm, @escolaIdUm, @sexoIdTres, '11234567891', 'Jogador 21', 30, '2020-01-01', 'NomeJogo 21'),
-    (@jogadorIdVinteDoi, @escolaIdDois, @sexoIdUm, '21234567891', 'Jogador 22', 31, '2021-01-01', 'NomeJogo 22'),
-    (@jogadorIdVinteTres, @escolaIdTres, @sexoIdDois, '31234567891', 'Jogador 23', 32, '2022-01-01', 'NomeJogo 23'),
-    (@jogadorIdVinteQuatro, @escolaIdQuatro, @sexoIdTres, '41234567891', 'Jogador 24', 33, '2023-01-01', 'NomeJogo 24'),
-    (@jogadorIdVinteCinco, @escolaIdCinco, @sexoIdUm, '51234567891', 'Jogador 25', 34, '2024-01-01', 'NomeJogo 25'),
-    (@jogadorIdVinteSeis, @escolaIdSeis, @sexoIdDois, '61234567891', 'Jogador 26', 35, '2025-01-01', 'NomeJogo 26'),
-    (@jogadorIdVinteSete, @escolaIdSete, @sexoIdTres, '71234567891', 'Jogador 27', 36, '2026-01-01', 'NomeJogo 27'),
-    (@jogadorIdVinteOito, @escolaIdOito, @sexoIdUm, '81234567891', 'Jogador 28', 37, '2027-01-01', 'NomeJogo 28'),
-    (@jogadorIdVinteNove, @escolaIdNove, @sexoIdDois, '91234567891', 'Jogador 29', 38, '2028-01-01', 'NomeJogo 29'),
-    (@jogadorIdTrinta, @escolaIdDez, @sexoIdTres, '01234567892', 'Jogador 30', 39, '2029-01-01', 'NomeJogo 30'),
-    (@jogadorIdTrintaUm, @escolaIdUm, @sexoIdUm, '11234567892', 'Jogador 31', 40, '2030-01-01', 'NomeJogo 31'),
-    (@jogadorIdTrintaDois, @escolaIdDois, @sexoIdDois, '21234567892', 'Jogador 32', 41, '2031-01-01', 'NomeJogo 32'),
-    (@jogadorIdTrintaTres, @escolaIdTres, @sexoIdTres, '31234567892', 'Jogador 33', 42, '2032-01-01', 'NomeJogo 33'),
-    (@jogadorIdTrintaQuatro, @escolaIdQuatro, @sexoIdUm, '41234567892', 'Jogador 34', 43, '2033-01-01', 'NomeJogo 34'),
-    (@jogadorIdTrintaCinco, @escolaIdCinco, @sexoIdDois, '51234567892', 'Jogador 35', 44, '2034-01-01', 'NomeJogo 35'),
-    (@jogadorIdTrintaSeis, @escolaIdSeis, @sexoIdTres, '61234567892', 'Jogador 36', 45, '2035-01-01', 'NomeJogo 36'),
-    (@jogadorIdTrintaSete, @escolaIdSete, @sexoIdUm, '71234567892', 'Jogador 37', 46, '2036-01-01', 'NomeJogo 37'),
-    (@jogadorIdTrintaOito, @escolaIdOito, @sexoIdDois, '81234567892', 'Jogador 38', 47, '2037-01-01', 'NomeJogo 38'),
-    (@jogadorIdTrintaNove, @escolaIdNove, @sexoIdTres, '91234567892', 'Jogador 39', 48, '2038-01-01', 'NomeJogo 39'),
-    (@jogadorIdQuarenta, @escolaIdDez, @sexoIdUm, '01234567893', 'Jogador 40', 49, '2039-01-01', 'NomeJogo 40');
+    (@jogadorIdUm, @escolaIdUm, @sexoIdUm, '12345678901', 'Jogador', '1', 10, '2000-01-01', 'NomeJogo 1'),
+    (@jogadorIdDois, @escolaIdUm, @sexoIdDois, '23456789012', 'Jogador','2', 11, '2001-01-01', 'NomeJogo 2'),
+    (@jogadorIdTres, @escolaIdDois, @sexoIdTres, '34567890123', 'Jogador','3', 12, '2002-01-01', 'NomeJogo 3'),
+    (@jogadorIdQuatro, @escolaIdDois, @sexoIdUm, '45678901234', 'Jogador 4', 'sobrenome', 13, '2003-01-01', 'NomeJogo 4'),
+    (@jogadorIdCinco, @escolaIdTres, @sexoIdDois, '56789012345', 'Jogador 5', 'sobrenome', 14, '2004-01-01', 'NomeJogo 5'),
+    (@jogadorIdSeis, @escolaIdTres, @sexoIdTres, '67890123456', 'Jogador 6', 'sobrenome',15, '2005-01-01', 'NomeJogo 6'),
+    (@jogadorIdSete, @escolaIdQuatro, @sexoIdUm, '78901234567', 'Jogador 7', 'sobrenome',16, '2006-01-01', 'NomeJogo 7'),
+    (@jogadorIdOito, @escolaIdQuatro, @sexoIdDois, '89012345678', 'Jogador 8', 'sobrenome',17, '2007-01-01', 'NomeJogo 8');
 
 SET @temporadaIdUm = UUID();
-SET @temporadaIdDois = UUID();
-SET @temporadaIdTres = UUID();
-SET @temporadaIdQuatro = UUID();
-SET @temporadaIdCinco = UUID();
-SET @temporadaIdSeis = UUID();
-SET @temporadaIdSete = UUID();
-SET @temporadaIdOito = UUID();
 
 -- Inserir dados na tabela TBTemporada com temporadas e campeonatos previamente declarados
 INSERT INTO TBTemporada (id, idCampeonato, dataInicio, dataFim)
 VALUES
-    (@temporadaIdUm, @campeonatoIdUm, '2023-01-01', '2023-12-31'),
-    (@temporadaIdDois, @campeonatoIdUm, '2024-01-01', '2024-12-31'),
-    (@temporadaIdTres, @campeonatoIdDois, '2023-01-01', '2023-12-31'),
-    (@temporadaIdQuatro, @campeonatoIdDois, '2024-01-01', '2024-12-31'),
-    (@temporadaIdCinco, @campeonatoIdTres, '2023-01-01', '2023-12-31'),
-    (@temporadaIdSeis, @campeonatoIdTres, '2024-01-01', '2024-12-31'),
-    (@temporadaIdSete, @campeonatoIdUm, '2025-01-01', '2025-12-31'),
-    (@temporadaIdOito, @campeonatoIdDois, '2025-01-01', '2025-12-31');
+    (@temporadaIdUm, @campeonatoIdUm, '2023-01-01', '2023-12-31');
 
 
-SET @partidaIdUm = UUID();        SET @partidaIdVinteUm= UUID();
-SET @partidaIdDois = UUID();      SET @partidaIdVinteDois = UUID();
-SET @partidaIdTres = UUID();      SET @partidaIdVinteTres = UUID(); 
-SET @partidaIdQuatro = UUID();    SET @partidaIdVinteQuatro = UUID();
-SET @partidaIdCinco = UUID();     SET @partidaIdVinteCinco = UUID();
-SET @partidaIdSeis= UUID();       SET @partidaIdVinteSeis = UUID();
-SET @partidaIdSete = UUID();      SET @partidaIdVinteSete = UUID();
-SET @partidaIdOito= UUID();       SET @partidaIdVinteOito = UUID();
-SET @partidaIdNove= UUID();       SET @partidaIdVinteNove = UUID();
-SET @partidaIdDez = UUID();       SET @partidaIdTrinta = UUID();
-SET @partidaIdOnze = UUID();      SET @partidaIdTrintaUm = UUID();
-SET @partidaIdDoze = UUID();      SET @partidaIdTrintaDois = UUID();
-SET @partidaIdTreze = UUID();     SET @partidaIdTrintaTres = UUID(); 
-SET @partidaIdQuatorze = UUID();  SET @partidaIdTrintaQuatro = UUID();
-SET @partidaIdQuinze = UUID();    SET @partidaIdTrintaCinco = UUID();
-SET @partidaIdDezesseis = UUID(); SET @partidaIdTrintaSeis = UUID();
-SET @partidaIdDezesere = UUID();  SET @partidaIdTrintaSete = UUID();
-SET @partidaIdDezoito = UUID();   SET @partidaIdTrintaOito = UUID();
-SET @partidaIdDezenove = UUID();  SET @partidaIdTrintaNove = UUID();
-SET @partidaIdVinte = UUID();     SET @partidaIdQuarenta = UUID();
-
+SET @partidaIdUm = UUID();
+SET @partidaIdDois = UUID();
+SET @partidaIdTres = UUID();
+SET @partidaIdQuatro = UUID();
+SET @partidaIdCinco = UUID();
+SET @partidaIdSeis = UUID();
+SET @partidaIdSete = UUID();
+SET @partidaIdOito = UUID();
+SET @partidaIdNove = UUID();
+SET @partidaIdDez = UUID();
+SET @partidaIdOnze = UUID();
+SET @partidaIdDoze = UUID();
 
 -- Inserir dados na tabela TBPartida com partidas previamente declaradas
-INSERT INTO TBPartida (id, dataHora, duracaoMilessegundos, mandanteId, visitanteId, idTemporada)
+INSERT INTO TBPartida (id, data, duracaoMilessegundos, idMandante, idVisitante, idTemporada)
 VALUES
     (@partidaIdUm, '2023-01-01 14:00:00', 7200, @escolaIdUm, @escolaIdDois, @temporadaIdUm),
-    (@partidaIdDois, '2023-01-02 15:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdUm),
-    (@partidaIdTres, '2023-01-03 16:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdDois),
-    (@partidaIdQuatro, '2023-01-04 17:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdDois),
-    (@partidaIdCinco, '2023-01-05 18:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdTres),
-    (@partidaIdSeis, '2023-01-06 19:00:00', 7200, @escolaIdUm, @escolaIdDois, @temporadaIdTres),
-    (@partidaIdSete, '2023-01-07 20:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdQuatro),
-    (@partidaIdOito, '2023-01-08 21:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdQuatro),
-    (@partidaIdNove, '2023-01-09 22:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdCinco),
-    (@partidaIdDez, '2023-01-10 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdCinco),
-    (@partidaIdOnze, '2023-01-11 14:00:00', 7200, @escolaIdUm, @escolaIdDois, @temporadaIdSeis),
-    (@partidaIdDoze, '2023-01-12 15:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdSeis),
-    (@partidaIdTreze, '2023-01-13 16:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdSete),
-    (@partidaIdQuatorze, '2023-01-14 17:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdSete),
-    (@partidaIdQuinze, '2023-01-15 18:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdOito),
-    (@partidaIdDezesseis, '2023-01-16 19:00:00', 7200, @escolaIdUm, @escolaIdDois, @temporadaIdOito),
-    (@partidaIdDezesere, '2023-01-17 20:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdUm),
-    (@partidaIdDezoito, '2023-01-18 21:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdUm),
-    (@partidaIdDezenove, '2023-01-19 22:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdDois),
-    (@partidaIdVinte, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteUm, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteDois, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteTres, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteQuatro, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteCinco, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteSeis, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteSete, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteOito, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdVinteNove, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdTrinta, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdTrintaUm, '2023-01-20 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-	(@partidaIdTrintaDois, '2023-02-01 15:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdOito),
-    (@partidaIdTrintaTres, '2023-02-02 16:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdUm),
-    (@partidaIdTrintaQuatro, '2023-02-03 17:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdUm),
-    (@partidaIdTrintaCinco, '2023-02-04 18:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdDois),
-    (@partidaIdTrintaSeis, '2023-02-05 19:00:00', 7200, @escolaIdUm, @escolaIdDois, @temporadaIdDois),
-    (@partidaIdTrintaSete, '2023-02-06 20:00:00', 7200, @escolaIdTres, @escolaIdQuatro, @temporadaIdTres),
-    (@partidaIdTrintaOito, '2023-02-07 21:00:00', 7200, @escolaIdCinco, @escolaIdSeis, @temporadaIdTres),
-    (@partidaIdTrintaNove, '2023-02-08 22:00:00', 7200, @escolaIdSete, @escolaIdOito, @temporadaIdQuatro),
-    (@partidaIdQuarenta, '2023-02-09 23:00:00', 7200, @escolaIdNove, @escolaIdDez, @temporadaIdQuatro);
-   
--- Gerar 100 inserções aleatórias na tabela TBGol
-DELIMITER //
-CREATE PROCEDURE InsertRandomGoals()
-BEGIN
-    DECLARE i INT;
-    SET i = 1;
-    
-    WHILE i <= 100 DO
-        -- Selecionar um ID de partida aleatório
-        SET @partidaId = (SELECT id FROM TBPartida ORDER BY RAND() LIMIT 1);
-        -- Selecionar um ID de jogador que marcou gol aleatório
-        SET @mandanteId = (SELECT mandanteId FROM TBPartida WHERE id = @partidaId LIMIT 1);
-        SET @visitanteId = (SELECT visitanteId FROM TBPartida WHERE id = @partidaId LIMIT 1);
-        SET @jogadorIdMarcou = (SELECT id FROM TBJogador WHERE idEscola = @mandanteId or idEscola = @visitanteId ORDER BY RAND() LIMIT 1);
-        -- Selecionar um ID de jogador de assistência aleatório ou nulo
-        SET @jogadorIdAssistencia = (SELECT id FROM TBJogador ORDER BY RAND() LIMIT 1);
-        IF RAND() < 0.2 THEN
-            SET @jogadorIdAssistencia = NULL;
-        END IF;
-        -- Gerar um ID de gol usando UUID
-        SET @golId = UUID();
-        -- Gerar valores aleatórios para os campos
-        SET @anulado = (RAND() < 0.1);
-        SET @pnalti = (RAND() < 0.3);
-        SET @contra = (RAND() < 0.2);
-        SET @tempoEmMilissegundos = FLOOR(RAND() * 9000) + 60000; -- Varie o tempo
-        
-        -- Inserir o registro na tabela TBGol
-        INSERT INTO TBGol (id, idPartida, idJogadorMarcou, idJogadorAssistencia, anulado, pnalti, contra, tempoEmMilissegundos)
-        VALUES (@golId, @partidaId, @jogadorIdMarcou, @jogadorIdAssistencia, @anulado, @pnalti, @contra, @tempoEmMilissegundos);
-        
-        SET i = i + 1;
-    END WHILE;
-END;
-//
-DELIMITER ;
+    (@partidaIdDois, '2023-01-02 15:00:00', 7200, @escolaIdUm, @escolaIdTres, @temporadaIdUm),
+    (@partidaIdTres, '2023-01-03 16:00:00', 7200, @escolaIdUm, @escolaIdQuatro, @temporadaIdUm),
+    (@partidaIdQuatro, '2023-01-04 17:00:00', 7200, @escolaIdDois, @escolaIdTres, @temporadaIdUm),
+    (@partidaIdCinco, '2023-01-05 18:00:00', 7200, @escolaIdDois, @escolaIdQuatro, @temporadaIdUm),
+    (@partidaIdSeis, '2023-01-06 19:00:00', 7200, @escolaIdQuatro, @escolaIdTres,  @temporadaIdUm),
+    (@partidaIdSete, '2023-01-06 20:00:00', 7200, @escolaIdDois, @escolaIdUm,  @temporadaIdUm),
+    (@partidaIdOito, '2023-01-06 20:00:00', 7200, @escolaIdTres, @escolaIdUm,  @temporadaIdUm),
+    (@partidaIdNove, '2023-01-06 20:00:00', 7200, @escolaIdQuatro, @escolaIdUm,  @temporadaIdUm),
+    (@partidaIdDez, '2023-01-06 20:00:00', 7200, @escolaIdQuatro, @escolaIdDois,  @temporadaIdUm),
+    (@partidaIdOnze, '2023-01-06 20:00:00', 7200, @escolaIdDois, @escolaIdTres,  @temporadaIdUm),
+    (@partidaIdDoze, '2023-01-06 20:00:00', 7200, @escolaIdTres, @escolaIdQuatro,  @temporadaIdUm);
 
--- Executar o procedimento para inserir 100 registros
-CALL InsertRandomGoals();
+
+INSERT INTO TBGol (id, idPartida, idJogadorMarcou, idJogadorAssistencia, anulado, pnalti, tempoEmMilissegundos)
+VALUES
+    (UUID(), @partidaIdUm,  @jogadorIdUm,  @jogadorIdDois, FALSE, FALSE, 45000),      -- Partida 1 -- Escola 1
+    (UUID(), @partidaIdUm,  @jogadorIdUm,  NULL, FALSE, FALSE, 45000),                -- Partida 1 -- Escola 1
+    (UUID(), @partidaIdTres,  @jogadorIdDois, NULL, FALSE, TRUE, 55000),              -- Partida 3 -- Escola 1
+    (UUID(), @partidaIdTres,  @jogadorIdUm, NULL, FALSE, TRUE, 55000),                -- Partida 3 -- Escola 1
+    (UUID(), @partidaIdTres,  @jogadorIdUm, @jogadorIdDois, TRUE, FALSE, 70000),      -- Partida 3 -- Escola 1 -- Anulado
+    (UUID(), @partidaIdTres,  @jogadorIdUm, NULL, TRUE, FALSE, 70000),                -- Partida 3 -- Escola 1 -- Anulado
+    (UUID(), @partidaIdTres,  @jogadorIdSete, @jogadorIdOito, FALSE, FALSE, 70000),   -- Partida 3 -- Escola 4
+    (UUID(), @partidaIdTres,  @jogadorIdSete, @jogadorIdOito, FALSE, FALSE, 70000),   -- Partida 3 -- Escola 4
+    (UUID(), @partidaIdQuatro, @jogadorIdTres, NULL, FALSE, FALSE, 30000),            -- Partida 4 -- Escola 2
+    (UUID(), @partidaIdQuatro, @jogadorIdTres, NULL, FALSE, FALSE, 37000),            -- Partida 4 -- Escola 2
+    (UUID(), @partidaIdQuatro, @jogadorIdSeis, @jogadorIdCinco, FALSE, FALSE, 48000), -- Partida 4 -- Escola 3
+    (UUID(), @partidaIdQuatro, @jogadorIdSeis, NULL, FALSE, FALSE, 42000), -- Partida 4 -- Escola 3
+    (UUID(), @partidaIdCinco, @jogadorIdTres,  null, FALSE, FALSE, 62000),            -- Partida 5 -- Escola 2
+    (UUID(), @partidaIdCinco, @jogadorIdQuatro, NULL, FALSE, TRUE, 67000),            -- Partida 5 -- Escola 2
+    (UUID(), @partidaIdCinco, @jogadorIdQuatro, NULL, TRUE, TRUE, 67000),             -- Partida 5 -- Escola 2  -- Anulado
+    (UUID(), @partidaIdCinco, @jogadorIdQuatro, NULL, TRUE, TRUE, 67000),             -- Partida 5 -- Escola 2  -- Anulado
+    (UUID(), @partidaIdCinco, @jogadorIdQuatro, NULL, TRUE, TRUE, 67000),             -- Partida 5 -- Escola 2  -- Anulado
+    (UUID(), @partidaIdSeis, @jogadorIdSete, @jogadorIdOito, FALSE, FALSE, 54000),    -- Partida 6 -- Escola 4
+    (UUID(), @partidaIdSeis, @jogadorIdSete, @jogadorIdOito, FALSE, FALSE, 54000),    -- Partida 6 -- Escola 4
+    (UUID(), @partidaIdSeis, @jogadorIdCinco, NULL, FALSE, FALSE, 38000),             -- Partida 6 -- Escola 3
+    (UUID(), @partidaIdSeis, @jogadorIdCinco, NULL, TRUE, FALSE, 38000),             -- Partida 6 -- Escola 3 -- Anulado
+    (UUID(), @partidaIdSete, @jogadorIdUm, @jogadorIdDois, FALSE, FALSE, 38000),      -- Partida 7 -- Escola 1
+    (UUID(), @partidaIdSete, @jogadorIdUm, NULL, TRUE, FALSE, 38000),                 -- Partida 7 -- Escola 1 -- Anulado
+    (UUID(), @partidaIdOito, @jogadorIdCinco, @jogadorIdSeis, FALSE, FALSE, 38000),   -- Partida 8 -- Escola 3
+    (UUID(), @partidaIdOito, @jogadorIdCinco, @jogadorIdSeis, TRUE, FALSE, 38000),    -- Partida 8 -- Escola 3 -- Anulado
+    (UUID(), @partidaIdOito, @jogadorIdSeis, @jogadorIdCinco, FALSE, FALSE, 38000),   -- Partida 8 -- Escola 3
+    (UUID(), @partidaIdNove, @jogadorIdUm, NULL, FALSE, FALSE, 38000),                -- Partida 9 -- Escola 1
+    (UUID(), @partidaIdNove, @jogadorIdUm, NULL, TRUE, FALSE, 38000),                -- Partida 9 -- Escola 1 -- Anulado
+    (UUID(), @partidaIdDez, @jogadorIdSete, @jogadorIdOito, FALSE, FALSE, 38000),     -- Partida 10 -- Escola 4
+    (UUID(), @partidaIdDez, @jogadorIdSete, NULL, FALSE, FALSE, 38000),               -- Partida 10 -- Escola 4
+    (UUID(), @partidaIdDez, @jogadorIdSete, NULL, TRUE, FALSE, 38000),               -- Partida 10 -- Escola 4 -- Anulado
+    (UUID(), @partidaIdOnze, @jogadorIdTres, NULL, FALSE, FALSE, 38000),              -- Partida 11 -- Escola 2
+    (UUID(), @partidaIdOnze, @jogadorIdTres, NULL, FALSE, FALSE, 38000);              -- Partida 11 -- Escola 2
+
 
 
 INSERT INTO TBParticipacaoCampeonato (id, idCampeonato, idEscola, status, administrador)
-SELECT
-    UUID(), c.id AS idCampeonato, e.id AS idEscola, 1, TRUE
-FROM
-    TBCampeonato c
-CROSS JOIN
-    TBEscola e
-UNION
-SELECT
-    UUID(), c.id AS idCampeonato, e.id AS idEscola, 1, FALSE
-FROM
-    TBCampeonato c
-CROSS JOIN
-    TBEscola e;
-    
-    
--- Inserir 30 faltas na tabela TBFalta com a restrição de jogadores de escolas diferentes
-DELIMITER //
-CREATE PROCEDURE InsertFaltasWithRestriction()
-BEGIN
-    DECLARE i INT;
-    SET i = 1;
+VALUES
+    (UUID(), @campeonatoIdUm, @escolaIdUm, 0, FALSE),
+    (UUID(), @campeonatoIdUm, @escolaIdDois, 0, TRUE),
+    (UUID(), @campeonatoIdUm, @escolaIdTres, 1, FALSE);
 
-    WHILE i <= 30 DO
-        -- Selecionar um ID de partida aleatório
-        SET @partidaId = (SELECT id FROM TBPartida ORDER BY RAND() LIMIT 1);
-        -- Selecionar um ID de jogador que sofreu a falta aleatório
-        SET @jogadorIdSofreu = (SELECT id FROM TBJogador ORDER BY RAND() LIMIT 1);
-        -- Selecionar um ID de jogador que cometeu a falta aleatório
-        SET @jogadorIdCometeu = (SELECT id FROM TBJogador WHERE idEscola <> (SELECT idEscola FROM TBJogador WHERE id = @jogadorIdSofreu) ORDER BY RAND() LIMIT 1);
-        -- Gerar um ID de falta usando UUID
-        SET @faltaId = UUID();
-        -- Gerar um tempo de partida em milissegundos
-        SET @tempoPartidaMilissegundos = FLOOR(RAND() * 9000) + 60000;
-
-        -- Inserir o registro na tabela TBFalta
-        INSERT INTO TBFalta (id, idPartida, idJogadorSofreu, idJogadorCometeu, tempoPartidaMilissegundos)
-        VALUES (@faltaId, @partidaId, @jogadorIdSofreu, @jogadorIdCometeu, @tempoPartidaMilissegundos);
-
-        SET i = i + 1;
-    END WHILE;
-END;
-//
-DELIMITER ;
-
--- Executar o procedimento para inserir 30 faltas com a restrição de jogadores de escolas diferentes
-CALL InsertFaltasWithRestriction();
+INSERT INTO TBFalta (id, idPartida, idJogadorSofreu, idJogadorCometeu, tempoPartidaMilissegundos)
+VALUES
+    (UUID(), @partidaIdUm, @jogadorIdUm, @jogadorIdDois, 60000),
+    (UUID(), @partidaIdDois, @jogadorIdDois, @jogadorIdUm, 62000),
+    (UUID(), @partidaIdTres, @jogadorIdTres, @jogadorIdCinco, 57000),
+    (UUID(), @partidaIdQuatro, @jogadorIdQuatro, @jogadorIdTres, 69000),
+    (UUID(), @partidaIdCinco, @jogadorIdCinco, @jogadorIdQuatro, 63000),
+    (UUID(), @partidaIdSeis, @jogadorIdDois, @jogadorIdTres, 72000),
+    (UUID(), @partidaIdSeis, @jogadorIdUm, @jogadorIdTres, 6500),
+    (UUID(), @partidaIdDois, @jogadorIdUm, @jogadorIdDois, 61000),
+    (UUID(), @partidaIdUm, @jogadorIdTres, @jogadorIdQuatro, 64000);
 
 -- Finalizado INSERS
+
+-- Selects
+
+-- 1.	Quantos partidas tiveram mais de x (2) quantidade de gols válidos;
+USE LEC;
+SELECT COUNT(*) as partidasComMaisDe2Gols
+FROM (SELECT COUNT(*) as gols FROM TBGol
+      WHERE anulado = FALSE
+      GROUP BY idPartida) as golsPorPartida
+WHERE golsPorPartida.gols > 2;
+
+-- 2.	Top 3 equipes com mais vitórias;
+USE LEC;
+SELECT e.nome, ganhadores.qtdVitorias FROM TBEscola e
+                                               JOIN (SELECT COUNT(*) as qtdVitorias,
+                                                            CASE
+                                                                WHEN golsMandantes > golsVisitantes THEN p.idMandante
+                                                                WHEN golsVisitantes > golsMandantes THEN p.idVisitante
+                                                                ELSE NULL
+                                                                END as idVencedor
+                                                     FROM TBPartida p
+                                                              JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                    FROM TBPartida p
+                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                            AND p.idMandante = j.idEscola
+                                                                                        GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                            AND p.idVisitante = j.idEscola
+                                                                                        GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                   ON golsPartida.id = p.id
+                                                     GROUP BY idVencedor) ganhadores on ganhadores.idVencedor = e.id
+ORDER BY ganhadores.qtdVitorias DESC LIMIT 3;
+
+-- 3.	Top 3 equipes com mais derrotas;
+USE LEC;
+SELECT e.nome, perdedores.qtdDerrotas FROM TBEscola e
+                                               JOIN (SELECT COUNT(*) as qtdDerrotas,
+                                                            CASE
+                                                                WHEN golsMandantes > golsVisitantes THEN p.idVisitante
+                                                                WHEN golsVisitantes > golsMandantes THEN p.idMandante
+                                                                ELSE NULL
+                                                                END as idPerdedor
+                                                     FROM TBPartida p
+                                                              JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                    FROM TBPartida p
+                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                            AND p.idMandante = j.idEscola
+                                                                                        GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                            AND p.idVisitante = j.idEscola
+                                                                                        GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                   ON golsPartida.id = p.id
+                                                     GROUP BY idPerdedor) perdedores on perdedores.idPerdedor = e.id
+ORDER BY perdedores.qtdDerrotas DESC LIMIT 3;
+
+-- 4.	Top 3 jogadores com mais assistências
+USE LEC;
+SELECT j.nomeJogo, COUNT(*) as assistencias FROM TBGol g
+                                                     JOIN TBJogador j ON j.id = g.idJogadorAssistencia
+WHERE g.anulado = FALSE
+GROUP BY g.idJogadorAssistencia
+ORDER BY assistencias DESC LIMIT 3;
+
+-- 5.	Top 3 jogadores com mais gols válidos;
+USE LEC;
+SELECT j.nomeJogo, COUNT(*) as golsValidos FROM TBGol g
+                                                    JOIN TBJogador j ON j.id = g.idJogadorMarcou
+WHERE g.anulado = FALSE
+GROUP BY g.idJogadorMarcou
+ORDER BY golsValidos DESC LIMIT 3;
+
+-- 6.	Top 3 jogadores com mais gols inválidos;
+USE LEC;
+SELECT j.nomeJogo, COUNT(*) as golsAnulados FROM TBGol g
+                                                     JOIN TBJogador j ON j.id = g.idJogadorMarcou
+WHERE g.anulado = TRUE
+GROUP BY g.idJogadorMarcou
+ORDER BY golsAnulados DESC LIMIT 3;
+
+-- 7.	Time que levou mais gols no campeonato;
+USE LEC;
+SELECT e.nome, e.id, (golsMandanteTomou.totalGols + golsVisitanteTomou.totalGols) as totalGols FROM TBEscola e
+                                                                                                        JOIN (SELECT golsVisitantesTomou.idVisitante, SUM(golsVisitantesTomou.gols) as totalGols FROM (SELECT p.id, p.idVisitante, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                                                                                                                JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                                                                                                                RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                                                                                                       WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                                                                                                           AND p.idMandante = j.idEscola
+                                                                                                                                                                                                       GROUP BY p.id, p.idMandante) as golsVisitantesTomou
+                                                                                                              GROUP BY golsVisitantesTomou.idVisitante) as golsVisitanteTomou on golsVisitanteTomou.idVisitante = e.id
+                                                                                                        JOIN (SELECT golsMandanteTomou.idMandante, SUM(golsMandanteTomou.gols) as totalGols FROM (SELECT p.id, p.idMandante, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                                                                                                          JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                                                                                                          RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                                                                                                  WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                                                                                                      AND p.idMandante = j.idEscola
+                                                                                                                                                                                                  GROUP BY p.id, p.idMandante) as golsMandanteTomou
+                                                                                                              GROUP BY golsMandanteTomou.idMandante) as golsMandanteTomou on golsMandanteTomou.idMandante = e.id
+ORDER BY totalGols DESC LIMIT 1;
+
+-- 8.	Partida com mais gols válidos;
+USE LEC;
+SELECT eM.Nome as escolaMandante, eV.Nome as escolaVisitante, p.data, COUNT(*) totalGols FROM TBGol g
+                                                                                                  JOIN TBPartida p ON p.id = g.idPartida
+                                                                                                  JOIN TBEscola eM ON eM.id = p.idMandante
+                                                                                                  JOIN TBEscola eV ON eV.id = p.idVisitante
+WHERE g.anulado = FALSE
+GROUP BY g.idPartida
+ORDER BY totalGols DESC LIMIT 1;
+
+-- 9.	Escola que mais empatou;
+USE LEC;
+SELECT e.Nome, (IFNULL(empatesMandantes.quantidadeEmpatada, 0) + IFNULL(empatesVisitante.quantidadeEmpatada, 0)) as QuantidadeEmpatada
+FROM TBEscola e
+         LEFT JOIN (SELECT p.idMandante, COUNT(*) quantidadeEmpatada FROM TBPartida p
+                                                                              JOIN (SELECT p.id
+                                                                                    FROM TBPartida p
+                                                                                             JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                                                   FROM TBPartida p
+                                                                                                            LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                 JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                 RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                       WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                           AND p.idMandante = j.idEscola
+                                                                                                                       GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                                                            LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                 JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                 RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                       WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                           AND p.idVisitante = j.idEscola
+                                                                                                                       GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                                                  ON golsPartida.id = p.id
+                                                                                    WHERE golsMandantes = golsVisitantes) partidasEmpatadas ON partidasEmpatadas.id = p.id
+                    GROUP BY p.idMandante) as empatesMandantes ON empatesMandantes.idMandante = e.id
+         LEFT JOIN (SELECT p.idVisitante, COUNT(*) quantidadeEmpatada FROM TBPartida p
+                                                                               JOIN (SELECT p.id
+                                                                                     FROM TBPartida p
+                                                                                              JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                                                    FROM TBPartida p
+                                                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                            AND p.idMandante = j.idEscola
+                                                                                                                        GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                                                             LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                                  JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                                  RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                        WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                            AND p.idVisitante = j.idEscola
+                                                                                                                        GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                                                   ON golsPartida.id = p.id
+                                                                                     WHERE golsMandantes = golsVisitantes) partidasEmpatadas ON partidasEmpatadas.id = p.id
+                    GROUP BY p.idVisitante) as empatesVisitante ON empatesVisitante.idVisitante = e.Id
+ORDER BY QuantidadeEmpatada DESC LIMIT 1;
+
+-- 10.	Nome de todos os campeonatos;
+USE LEC;
+SELECT c.nome FROM TBCampeonato c;
+
+
+-- 11.	Todas as partidas com mais de x (2) gols;
+USE LEC;
+SELECT eM.nome as NomeMandante, eV.nome as NomeVisitante, p.data, partidasComMaisDe2Gols.golsTotais
+FROM (
+         SELECT g.idPartida, COUNT(*) as golsTotais
+         FROM TBGol g
+         WHERE g.anulado = FALSE
+         GROUP BY g.idPartida
+         HAVING golsTotais > 2
+     ) AS partidasComMaisDe2Gols
+         JOIN TBPartida p ON p.id = partidasComMaisDe2Gols.idPartida
+         JOIN TBEscola eM ON eM.id = p.idMandante
+         JOIN TBEscola eV ON eV.id = p.idVisitante;
+
+-- 12.	Jogador com mais faltas feitas;
+USE LEC;
+SELECT j.nomeJogo, f.idJogadorCometeu, COUNT(*) as totalFaltasFeitas FROM TBFalta f
+                                                                              JOIN TBJogador j ON j.id = f.idJogadorCometeu
+GROUP BY f.idJogadorCometeu
+ORDER BY totalFaltasFeitas DESC LIMIT 1;
+
+-- 13.	Empates de equipes específicas
+SELECT p.id as idPartidade, p.data, e.id as idEscola, e.nome, partidasGols.golsMandantes, partidasGols.golsVisitantes
+FROM TBPartida p
+         JOIN (SELECT e.id, e.nome FROM TBEscola e
+               WHERE e.nome LIKE '%ESCOLA D%') e ON e.id = p.idMandante OR e.id = p.idVisitante
+         JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+               FROM TBPartida p
+                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                       AND p.idMandante = j.idEscola
+                                   GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                       AND p.idVisitante = j.idEscola
+                                   GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id
+               WHERE IFNULL(golsVisitantes.gols, 0) = IFNULL(golsMandantes.gols, 0)) as partidasGols ON partidasGols.id = p.id;
+
+-- 14.	Vitórias de equipes específicas;
+USE LEC;
+SELECT p.id as idPartida, e.id as idEscola, e.nome as nomeEscola FROM TBPartida p
+                                                                          JOIN (SELECT e.id, e.nome FROM TBEscola e
+                                                                                WHERE e.nome LIKE '%ESCOLA D%') as e ON e.id = p.idMandante OR e.id = p.idVisitante
+                                                                          JOIN (SELECT p.id,
+                                                                                       CASE
+                                                                                           WHEN golsMandantes > golsVisitantes THEN p.idMandante
+                                                                                           WHEN golsVisitantes > golsMandantes THEN p.idVisitante
+                                                                                           ELSE NULL
+                                                                                           END as idVencedor
+                                                                                FROM TBPartida p
+                                                                                         JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                                               FROM TBPartida p
+                                                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                       AND p.idMandante = j.idEscola
+                                                                                                                   GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                       AND p.idVisitante = j.idEscola
+                                                                                                                   GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                                              ON golsPartida.id = p.id) vencedoresPartidas ON vencedoresPartidas.id = p.id
+WHERE vencedoresPartidas.idVencedor = e.id;
+
+
+-- 15.	Derrotas de equipes específicas;
+USE LEC;
+SELECT p.id as idPartida, e.id as idEscola, e.nome as nomeEscola FROM TBPartida p
+                                                                          JOIN (SELECT e.id, e.nome FROM TBEscola e
+                                                                                WHERE e.nome LIKE '%ESCOLA D%') as e ON e.id = p.idMandante OR e.id = p.idVisitante
+                                                                          JOIN (SELECT p.id,
+                                                                                       CASE
+                                                                                           WHEN golsMandantes > golsVisitantes THEN p.idVisitante
+                                                                                           WHEN golsVisitantes > golsMandantes THEN p.idMandante
+                                                                                           ELSE NULL
+                                                                                           END as idPerdedor
+                                                                                FROM TBPartida p
+                                                                                         JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                                                               FROM TBPartida p
+                                                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                       AND p.idMandante = j.idEscola
+                                                                                                                   GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                                                       AND p.idVisitante = j.idEscola
+                                                                                                                   GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                                                              ON golsPartida.id = p.id) perdedoresPartidas ON perdedoresPartidas.id = p.id
+WHERE perdedoresPartidas.idPerdedor = e.id;
+
+
+-- 16.	Consultar quais as organizações apoiadoras de um campeonato;
+USE LEC;
+SELECT p.id, p.nome FROM TBCampeonatoPatrocinador cp
+                             JOIN (SELECT * FROM TBCampeonato c
+                                   WHERE c.nome LIKE '%Campeonato A%') as campeonato ON campeonato.id = cp.idCampeonato
+                             JOIN TBPatrocinador p ON p.id = cp.idPatrocinador;
+
+-- 17.	Consultar quais as organizações apoiadoras de uma escola
+USE LEC;
+SELECT p.id, p.nome FROM TBEscolaPatrocinador ep
+                             JOIN (SELECT e.id, e.nome FROM TBEscola e
+                                   WHERE e.nome LIKE '%ESCOLA A%') as escola ON escola.id = ep.idEscola
+                             JOIN TBPatrocinador p ON p.id = ep.idPatrocinador;
+
+-- 18.	Quantidade total de partidas de uma equipe;
+USE LEC;
+SELECT COUNT(*) FROM TBPartida p
+                         JOIN (SELECT e.id, e.nome FROM TBEscola e
+                               WHERE e.nome LIKE '%ESCOLA B%') as e ON e.id = p.idMandante OR e.id = p.idVisitante
+GROUP BY e.id;
+
+-- 19.	Jogadores com mais faltas sofridas;
+USE LEC;
+SELECT j.nomeJogo, f.idJogadorSofreu, COUNT(*) as totalFaltasSofridas FROM TBFalta f
+                                                                               JOIN TBJogador j ON j.id = f.idJogadorSofreu
+GROUP BY f.idJogadorSofreu
+ORDER BY totalFaltasSofridas DESC LIMIT 1;
+
+-- 20.	Jogador com mais gols válidos de uma escola;
+USE LEC;
+SELECT j.nomeJogo as nomeJogador, j.id as idJogador, e.nome as nomeEscola, COUNT(*) as totalGols FROM TBEscola e
+                                                                                                          JOIN TBJogador as j ON j.idEscola = e.id
+                                                                                                          JOIN TBGol as g ON g.idJogadorMarcou = j.id
+WHERE e.nome LIKE '%ESCOLA C%' AND g.anulado = FALSE
+GROUP BY j.id
+ORDER BY totalGols DESC LIMIT 1;
+
+-- 21.	Jogadores que não marcaram gols (diferença entre conjuntos oriundos);
+USE LEC;
+SELECT j.id, j.nome, j.idEscola FROM TBJogador j
+WHERE j.id NOT IN (SELECT DISTINCT g.idJogadorMarcou as id FROM TBGol g
+                   WHERE g.anulado = FALSE);
+
+-- 22.	Quantas partidas terminaram em empate (acesso a três tabelas).
+USE LEC;
+SELECT COUNT(*) as totalPartidasEmpatadas FROM (SELECT p.id,
+                                                       CASE
+                                                           WHEN golsMandantes > golsVisitantes THEN p.idMandante
+                                                           WHEN golsVisitantes > golsMandantes THEN p.idVisitante
+                                                           ELSE NULL
+                                                           END as idVencedor
+                                                FROM TBPartida p
+                                                         JOIN (SELECT p.id, IFNULL(golsVisitantes.gols, 0) as golsVisitantes, IFNULL(golsMandantes.gols, 0) as golsMandantes
+                                                               FROM TBPartida p
+                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                       AND p.idMandante = j.idEscola
+                                                                                   GROUP BY p.id, p.idMandante) golsMandantes ON golsMandantes.id = p.id
+                                                                        LEFT JOIN (SELECT p.id, COUNT(g.id) as gols FROM TBGol g
+                                                                                                                             JOIN TBJogador j ON g.idJogadorMarcou = j.id
+                                                                                                                             RIGHT JOIN TBPartida p ON g.idPartida = p.id
+                                                                                   WHERE g.anulado IS NULL OR g.anulado = FALSE
+                                                                                       AND p.idVisitante = j.idEscola
+                                                                                   GROUP BY p.id, p.idVisitante) golsVisitantes ON golsVisitantes.id = p.id) as golsPartida
+                                                              ON golsPartida.id = p.id) as resultadosPartidas
+WHERE resultadosPartidas.idVencedor IS NULL;

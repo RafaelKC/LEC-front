@@ -1,26 +1,85 @@
 <?php
-  include('../../banco/connection.php');
+include('../../banco/connection.php');
 
-    session_start();
-    if (isset($_SESSION['user'])) {
-        header('Location: ../../');
-    }
+session_start();
+if (isset($_SESSION['user'])) {
+    header('Location: ../../');
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    
+<?php
+
+if(isset($_POST['cadastro_patrocinador'])) {
+    $patrocinadorId = uniqid();
+    $nome = mysqli_real_escape_string($connection, $_POST['nome']);
+
+    $email = mysqli_real_escape_string($connection, $_POST['email']);
+    $senha = mysqli_real_escape_string($connection, $_POST['senha']);
+    $confirmarSenha = mysqli_real_escape_string($connection, $_POST['confirmarSenha']);
+
+    $cpf = null;
+    $cnpj = null;
+
+
+    if (isset($_POST['cpf']) && $_POST['cpf'] != '') {
+        $cpf = mysqli_real_escape_string($connection, $_POST['cpf']);
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+    }
+    if (isset($_POST['cnpj']) && $_POST['cnpj'] != '') {
+        $cnpj = mysqli_real_escape_string($connection, $_POST['cnpj']);
+        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+    }
+
+
+    $enderecoId = uniqid();
+    $cep = mysqli_real_escape_string($connection, $_POST['cep']);
+    $cep = preg_replace('/[^0-9]/', '', $cep);
+    $logradouro = mysqli_real_escape_string($connection, $_POST['logradouro']);
+    $numeroEndereco = mysqli_real_escape_string($connection, $_POST['numeroEndereco']);
+    $bairro = mysqli_real_escape_string($connection, $_POST['bairro']);
+    $cidade = mysqli_real_escape_string($connection, $_POST['cidade']);
+    $estado = mysqli_real_escape_string($connection, $_POST['estado']);
+
+
+    $sqlCreateEndereco = "INSERT INTO TBEndereco (id, cep, logradouro, bairro, cidade, uf)
+                                    VALUES
+                                        ('$enderecoId', '$cep', '$logradouro', '$bairro', '$cidade', '$estado');";
+
+    $sqlCreatePatrocinador = "INSERT INTO TBPatrocinador (id, nome, cnpj, cpf,email, senha, idEndereco)
+                                    VALUES
+                                        ('$patrocinadorId', '$nome', '$cnpj','$cpf', '$email', '$senha', '$enderecoId');";
+
+    $createEndereco = mysqli_query($connection, $sqlCreateEndereco);
+    $createPatrocinador = mysqli_query($connection, $sqlCreatePatrocinador);
+
+    if (!$createEndereco and !$createPatrocinador ) {
+        echo '<b>Error</b>';
+    } else {
+        header('Location: ../../');
+        exit();
+    }
+}
+mysqli_close($connection);
+?>
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+
     <head>
         <link rel="stylesheet" href="../../styles/fomInput.css">
         <link rel="stylesheet" href="../../styles/base.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
+        </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
         <link rel="icon" type="image/png" href="../../assets/logotipo.png" sizes="16x16">
         <script type="module" src="script.js"></script>
-        <title>Cadastro de Escola</title>
-</head>
-<body>
+        <title>Cadastro de Patrocinador</title>
+    </head>
+    <body>
     <header>
         <div>
             <h1><a class="homeLink" href="../../">Liga Esportiva Curitiba</a></h1>
@@ -29,8 +88,123 @@
             <img id="logo" alt="Logo LEC" src="../../assets/logotipo.png">
         </div>
     </header>
-    <main></main>
-</body>
-    
 
-</html>
+    <main>
+        <div class="formularioContainer">
+            <div class="titulo">
+                <h3>CADASTRO DE PATROCINADOR</h3>
+            </div>
+            <div id="formulario">
+                <form id="form" action="index.php" method="post" name="cadastro_patrocinador">
+                    <div id="nomeInput">
+                        <div class="formInput">
+                            <label for="nome">Nome </label>
+                            <input type="text" id="nome" name="nome" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+                    </div>
+
+                    <div id="emailCnpj">
+                        <div class="formInput">
+                            <label for="cnpj">CNPJ</label>
+                            <input type="text" id="cnpj" name="cnpj" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+                    </div>
+
+
+                    <div class="formInput">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf">
+                        <span>Aqui vai a mensagem de erro....</span>
+                    </div>
+
+                    <div id="endereco">
+                        <div class="formInput">
+                            <label for="cep">CEP</label>
+                            <input type="text" id="cep" name="cep" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="logradouro">Logradouro</label>
+                            <input type="text" id="logradouro" name="logradouro" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="numeroEndereco">Numero</label>
+                            <input type="number" id="numeroEndereco" name="numeroEndereco" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" id="bairro" name="bairro" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" id="cidade" name="cidade" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="estado">Estado</label>
+                            <input type="text" id="estado" name="estado" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                    </div>
+
+                    <div id="senhasForm">
+                        <div class="formInput">
+                            <label for="senha">Senha</label>
+                            <input type="password" id="senha" name="senha" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="confirmarSenha">Confirmar Senha</label>
+                            <input type="password" id="confirmarSenha" name="confirmarSenha" value="">
+                            <span>Aqui vai a mensagem de erro....</span>
+                        </div>
+                    </div>
+
+
+                    <div id="footer">
+                        <div id="passTips">
+                            <ul>
+                                <li>A senha deve ter ao mínimo 8 caracteres</li>
+                                <li>A senha deve ter ao menos um caracter maiúsculo</li>
+                                <li>A senha deve ter ao menos um caracter minusculo</li>
+                                <li>A senha deve ter ao menos um caracter numérico</li>
+                                <li>A senha deve ter ao menos um caracter especial</li>
+                            </ul>
+                        </div>
+                        <div class="submmitContainer">
+                            <button type="submit" id="btn" name="cadastro_patrocinador"> Continuar </button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+        <div id="capivaraFoto">
+            <img alt="Capivara Mascote" src="../../assets/capivara mascote.png">
+        </div>
+    </main>
+
+    <script type="module" src="script.js"></script>
+    </body>
+
+    </html>
