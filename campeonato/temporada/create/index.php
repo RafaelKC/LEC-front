@@ -1,7 +1,9 @@
 <?php
 include("../../../banco/connection.php");
-
-
+session_start();
+if (empty($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
+    header('Location: ../../../');
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +40,13 @@ include("../../../banco/connection.php");
                     <select id="idCampeonato" name="idCampeonato">
 
                         <?php
-                        $sqlSelectCampeonatos = "SELECT id, nome FROM TBCampeonato";
+                        $idEscoa = $_SESSION['user']['id'];
+
+                        $sqlSelectCampeonatos = "SELECT c.id, c.nome FROM TBCampeonato c
+                                                JOIN TBParticipacaoCampeonato pc ON c.id = pc.idCampeonato
+                                                WHERE pc.idEscola = '$idEscoa'
+                                                AND pc.administrador = TRUE;";
+
                         $resultCampeonatos = mysqli_query($connection, $sqlSelectCampeonatos);
 
                         while ($rowCampeonato = mysqli_fetch_assoc($resultCampeonatos)) {
@@ -83,6 +91,8 @@ if (isset($_POST['create_temporada'])) {
 
     if (!$create_temporada) {
         echo '<b>Error ao cadastrar a temporada</b>';
+    } else {
+        header('Location: ../../../');
     }
 }
 ?>

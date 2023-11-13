@@ -1,5 +1,9 @@
 <?php
-include("../../banco/connection.php")
+    include("../../banco/connection.php");
+    session_start();
+    if (empty($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
+        header('Location: ../../');
+    }
 ?>
 
 <!DOCTYPE html>
@@ -47,16 +51,25 @@ include("../../banco/connection.php")
     <?php
     if (isset($_POST['create_campeonato'])) {
         $campeonatoId = uniqid();
+        $campeonatoEscolaId = uniqid();
         $nome = mysqli_real_escape_string($connection, $_POST['campeonatoNome']);
 
+        $idEscola = $_SESSION['user']['id'];
 
         $sqlCreateCampeonato = "INSERT INTO TBCampeonato (id, nome) VALUES ('$campeonatoId', '$nome')";
+        $sqlCreateCampeonatoEscola = "INSERT INTO TBParticipacaoCampeonato (id, idCampeonato, idEscola, status, administrador)
+                                VALUES 
+                                    ('$campeonatoEscolaId', '$campeonatoId', '$idEscola', 0, TRUE);";
 
 
         $create_campeonato = mysqli_query($connection, $sqlCreateCampeonato);
+        echo $sqlCreateCampeonatoEscola;
+        $create_campeonato_escola = mysqli_query($connection, $sqlCreateCampeonatoEscola);
 
         if (!$create_campeonato) {
             echo '<b>Error</b>';
+        } else {
+            header('Location: ../../');
         }
     }
 

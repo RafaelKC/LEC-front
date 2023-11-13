@@ -77,8 +77,13 @@
             <div class="options">
                 <a class="headerSegundario" href="/LEC-front">Início</a>
                 <a class="headerSegundario">Jogadores</a>
-                <a class="headerSegundario">Campeonatos</a>
-                <a class="headerSegundario">Partidas</a>
+                <?php
+                    if (!$userAtualPatrocinador) {
+                        echo '<a href="../campeonato/create" class="headerSegundario">Campeonatos</a>';
+                        echo '<a href="../campeonato/temporada/create" class="headerSegundario">Temporadas</a>';
+                        echo '<a href="../partida/create/" class="headerSegundario">Partidas</a>';
+                    }
+                ?>
                 <a class="headerSegundario" href="/LEC-front/sobre">Sobre</a>
             </div>
             <div class="logoHeader">

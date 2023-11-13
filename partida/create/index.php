@@ -8,6 +8,31 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
 }
 ?>
 
+<?php
+if (isset($_POST['create_partida'])) {
+    $partidaId = uniqid();
+    $EscolaMandante = mysqli_real_escape_string($connection, $_POST['escola1']);
+    $EscolaVisitante = mysqli_real_escape_string($connection, $_POST['escola2']);
+    $temporada = mysqli_real_escape_string($connection, $_POST['temporada']);
+    $data = mysqli_real_escape_string($connection, $_POST['partidaData']);
+    $duracaoMilessegundos = mysqli_real_escape_string($connection, $_POST['duracao']);;
+
+
+    $sqlCreatePartida = "INSERT INTO TBPartida (id, data, duracaoMilessegundos, idMandante, idVisitante, idTemporada) VALUES ('$partidaId', '$data', $duracaoMilessegundos, '$EscolaMandante', '$EscolaVisitante', '$temporada')";
+    ;
+
+
+    $createPartida = mysqli_query($connection, $sqlCreatePartida);
+
+    if (!$createPartida) {
+        echo '<b>Error</b>';
+    } else {
+        header('Location: ../../');
+        exit();
+    }
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +88,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                     <div>
                         <div class="formInput">
                             <label for="campeonatoInput">Selecione o Campeonato</label>
-                            <select name="campeonato" id="campeonatoInput">
+                            <select name="campeonato" id="campeonatoInput" selected="<?php echo $_GET['idCampeonato']?>">
                                 <?php
                                 $idEscoa = $_SESSION['user']['id'];
 
@@ -78,7 +103,11 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                                 $resultCheckCampeonato = mysqli_num_rows($resultCampeonato);
                                 if ($resultCheckCampeonato > 0) {
                                     while ($rowCampeonato = mysqli_fetch_assoc($resultCampeonato)) {
-                                        echo '<option value="' . $rowCampeonato['id'] . '">' . $rowCampeonato['nome'] . '</option>';
+                                        if ($rowCampeonato['id'] == $_GET['idCampeonato']) {
+                                            echo '<option selected value="' . $rowCampeonato['id'] . '">' . $rowCampeonato['nome'] . '</option>';
+                                        } else {
+                                            echo '<option value="' . $rowCampeonato['id'] . '">' . $rowCampeonato['nome'] . '</option>';
+                                        }
                                     }
                                 }
                                 ?>
@@ -98,8 +127,8 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                 <div>
                     <div>
                         <div class="formInput">
-                            <label for="temporada">Selecione um temporada:</label>
-                            <select name="temporada" id="temporadaInput">
+                            <label for="temporadaInput">Selecione um temporada:</label>
+                            <select name="temporada" id="temporadaInput" selected="<?php echo $_GET['idTemporada']?>">
                                 <?php
                                 $idCamepeonato = $_GET['idCampeonato'];
 
@@ -108,7 +137,11 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                                 $resultCheckTemporada = mysqli_num_rows($resultTemporada);
                                 if ($resultCheckTemporada > 0) {
                                     while ($rowTemporada = mysqli_fetch_assoc($resultTemporada)) {
-                                        echo '<option value="' . $rowTemporada['id'] . '">' . $rowTemporada['dataInicio'] . ' - ' . $rowTemporada['dataFim']. '</option>';
+                                        if ($rowTemporada['id'] == $_GET['idTemporada']) {
+                                            echo '<option selected value="' . $rowTemporada['id'] . '">' . $rowTemporada['dataInicio'] . ' - ' . $rowTemporada['dataFim']. '</option>';
+                                        } else {
+                                            echo '<option value="' . $rowTemporada['id'] . '">' . $rowTemporada['dataInicio'] . ' - ' . $rowTemporada['dataFim']. '</option>';
+                                        }
                                     }
                                 }
                                 ?>
@@ -128,18 +161,24 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                 <h3>REGISTRO DE PARTIDA</h3>
             </div>
             <div id="formulario">
-                <form id="form" action="index.php" method="post" name="create_partida">
+                <form id="form" class="mainForm" action="index.php" method="post" name="create_partida">
                     <div id="nomeInput">
                         <div class="formInput">
-                            <label for="nome">Selecione uma escola</label>
+                            <label for="escola1">Selecione uma escola</label>
                             <select name="escola1" id="escola1">
                                 <?php
-                                $sql = "SELECT nome FROM LEC.TBEscola";
+                                $idCamepeonato = $_GET['idCampeonato'];
+
+                                $sql = "
+                                    SELECT e.nome, e.id FROM TBEscola e
+                                    JOIN TBParticipacaoCampeonato pc ON e.id = pc.idEscola
+                                    WHERE pc.idCampeonato = '$idCamepeonato';
+                                ";
                                 $result = mysqli_query($connection, $sql);
                                 $resultCheck = mysqli_num_rows($result);
                                 if ($resultCheck > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo '<option value="' . '">' . $row['nome'] . '</option>';
+                                        echo '<option value="'. $row['id'] .'">' . $row['nome'] . '</option>';
                                     }
                                 }
                                 ?>
@@ -147,51 +186,68 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['type'] == 'PATROCINADOR') {
                         </div>
 
                         <div class="formInput">
-                            <label for="nome">Selecione outra escola</label>
+                            <label for="escola2">Selecione outra escola</label>
                             <select name="escola2" id="escola2">
                                 <?php
-                                $sql = "SELECT nome FROM LEC.TBEscola";
+                                $idCamepeonato = $_GET['idCampeonato'];
+                                $sql = "
+                                    SELECT e.nome, e.id FROM TBEscola e
+                                    JOIN TBParticipacaoCampeonato pc ON e.id = pc.idEscola
+                                    WHERE pc.idCampeonato = '$idCamepeonato';
+                                ";
                                 $result = mysqli_query($connection, $sql);
                                 $resultCheck = mysqli_num_rows($result);
                                 if ($resultCheck > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) {
-                                        echo '<option value="' . '">' . $row['nome'] . '</option>';
+                                        echo '<option value="'. $row['id'] .'">' . $row['nome'] . '</option>';
                                     }
                                 }
                                 ?>
                             </select>
+                        </div>
+
+                        <div class="formInput">
+                            <label for="duracao">Duração em Milissegundos</label>
+                            <input type="number" id="duracao" name="duracao">
                         </div>
                     </div>
 
                     <div class="formInput">
-                        <label for="data">Data da partida</label>
-                        <input type="date" id="partidaData" name="partidaData">
+                        <label for="partidaData">Data da partida</label>
+                        <input type="datetime-local" id="partidaData" name="partidaData">
                     </div>
                     <div class="submmitContainer">
                         <button type="submit" id="btn" name="create_partida"> Continuar </button>
                     </div>
+
+                    <input type="hidden" name="temporada" value="<?php echo $_GET['idTemporada'];?>">
+                </form>
     </main>
 </body>
 
 </html>
 
+
 <?php
-if (isset($_POST['create_partida'])) {
-    $partidaId = uniqid();
-    $EscolaMandante = mysqli_real_escape_string($connection, $_POST['escola1']);
-    $EscolaVisitante = mysqli_real_escape_string($connection, $_POST['escola2']);
-    $data = mysqli_real_escape_string($connection, $_POST['partidaData']);
-    $duracaoMilessegundos = 5400;
-
-
-    $sqlCreatePartida = "INSERT INTO TBPartida (id, data, duracaoMilessegundos, idMandante, idVisitante, idTemporada) VALUES ('$partidaId', '$data', $duracaoMilessegundos, '$EscolaMandante', '$EscolaVisitante', '31bfd9e1-7dc0-11ee-8657-02506150e648')";
-    ;
-
-
-    $createPartida = mysqli_query($connection, $sqlCreatePartida);
-
-    if (!$createPartida) {
-        echo '<b>Error</b>';
+    if (isset($_GET['idCampeonato']) && isset($_GET['idTemporada'])) {
+        echo '
+            <script>
+                const form = document.querySelector("#form.mainForm");
+                const escola1 = document.getElementById("escola1");
+                const escola2 = document.getElementById("escola2");
+                form.addEventListener("submit", (ev) => {
+                    const escola1Value = escola1.value;
+                    const escola2Value = escola2.value;
+            
+                    console.log(escola1Value)
+                    console.log(escola2Value)
+            
+                    if (escola1Value === escola2Value) {
+                        ev.preventDefault();
+                        alert("Escolha diferentes escolas");
+                    }
+                });
+            </script>
+        ';
     }
-}
 ?>

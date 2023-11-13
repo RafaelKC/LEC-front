@@ -8,7 +8,7 @@
         P.data AS DataHoraPartida,
         P.id as PartidaID,
         P.duracaoMilessegundos AS DuracaoMilliseconds,
-        1 AS TemporadaID,
+        CONCAT(Temporada.dataInicio, ' - ', Temporada.dataFim) AS TemporadaID,
         Campeonato.nome AS CampeonatoNome
     FROM TBPartida P
     JOIN TBEscola Mandante ON P.idMandante = Mandante.id
