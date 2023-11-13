@@ -80,7 +80,7 @@
                 if (!isset($_SESSION['user'])) {
                     echo '<a class="headerSegundario" href="/LEC-front/login">Login</a>';
                     echo '<a class="headerSegundario" href="/LEC-front/escola/create/">Cadastrar escola</a>';
-                    echo '<a class="headerSegundario">Cadastrar patrocinador </a>';
+                    echo '<a class="headerSegundario" href="/LEC-front/patrocinador/index.php/">Cadastrar patrocinador </a>';
                 } else {
                     echo '<a class="headerSegundario" href="/LEC-front/sair">Sair</a>';
                 }

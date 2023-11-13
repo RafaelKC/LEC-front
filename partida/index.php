@@ -171,6 +171,7 @@
                         }
                         ?>
                     </table>
+
                     <?php
                     if ($isSchoolAdmin) {
                         echo '
@@ -178,8 +179,13 @@
                             <a href="/LEC-front/partida/gol/create?idPartida='.$gameId.'">
                                 <button id="golsBtn">Clique aqui para adicionar gols</button>
                             </a>
+                            <form method="post" action="deletePartida.php">
+                                <input type="hidden" name="gameId" value="' . $gameDetails['PartidaID'] . '">
+                                <button type="submit" id="golsBtn">Deletar Partida</button>
+                            </form>
                         </div>';
                     }
+
                     ?>
 
                     <?php

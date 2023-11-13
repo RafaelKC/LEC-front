@@ -24,3 +24,8 @@ echo $sqlDefinitivo;
 
 mysqli_query($connection, $sqlDefinitivo);
 header('Location: ../../escola?id='.$idEscola);
+?>
+
+
+
+
