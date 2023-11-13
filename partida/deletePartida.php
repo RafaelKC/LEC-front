@@ -28,11 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($isSchoolAdmin) {
 
             $sqlDeleteGoals = "DELETE FROM TBGol WHERE idPartida = '$gameId'";
-            $resultDeleteGoals = mysqli_query($connection, $sqlDeleteGoals);
+            $sqlDeleteFaltas = "DELETE FROM TBFalta WHERE idPartida = '$gameId'";
 
-            if ($resultDeleteGoals) {
+            $resultDeleteGoals = mysqli_query($connection, $sqlDeleteGoals);
+            $resultDeleteFaltas = mysqli_query($connection, $sqlDeleteFaltas);
+
+            if ($resultDeleteGoals && $resultDeleteFaltas) {
 
                 $sqlDeleteGame = "DELETE FROM TBPartida WHERE id = '$gameId'";
+                echo $sqlDeleteGame;
                 $resultDeleteGame = mysqli_query($connection, $sqlDeleteGame);
 
                 if ($resultDeleteGame) {

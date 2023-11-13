@@ -8,11 +8,14 @@ if (!isset($_SESSION['user']) || !isset($_GET['idJogador']) || $_SESSION['user']
 }
 
 $idJogador = $_GET['idJogador'];
-$sql = "DELETE FROM TBJogador WHERE id = '$idJogador' AND idEscola = '". $_SESSION['user']['id'] ."'";
 
-echo $sql;
+$sqlDeleteFalta = "DELETE FROM TBFalta WHERE idJogadorSofreu = '$idJogador' OR idJogadorCometeu = '$idJogador';";
+$sqlDeleteGol = "DELETE FROM TBGol WHERE idJogadorAssistencia = '$idJogador' OR idJogadorMarcou = '$idJogador';";
+$sqlDeleteJogador = "DELETE FROM TBJogador WHERE id = '$idJogador';";
 
-$result = $resultGoals = mysqli_query($connection, $sql);
+$resultFalta = $resultGoals = mysqli_query($connection, $sqlDeleteFalta);
+$resultGol = $resultGoals = mysqli_query($connection, $sqlDeleteGol);
+$resultJogador = $resultGoals = mysqli_query($connection, $sqlDeleteJogador);
 
 header("Location: ../../?id=".$_SESSION['user']['id']);
 ?>
